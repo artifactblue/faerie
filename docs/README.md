@@ -34,6 +34,7 @@ Webhook URL: heroku host name
 heroku config:add HUBOT_NAME=${your_bot_name}
 heroku config:add HUBOT_LINE_TOKEN=${your_token}
 heroku config:add LINE_CHANNEL_SECRET=${CHANNEL_SECRET}
+heroku config:add HUBOT_HEROKU_KEEPALIVE_URL=
 ```
 
 ### Debug on Heroku
