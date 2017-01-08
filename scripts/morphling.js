@@ -12,6 +12,23 @@ const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 const LINE_TOKEN = process.env.HUBOT_LINE_TOKEN;
 
 module.exports = function(robot){
+  var sticker = function(message){
+    // Not implement listener, so should CatchAllMessage.message
+    console.log("message: ", message);
+    var stickerMsg = message.message;
+    if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
+      if(stickerMsg.stickerId === '1'){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  robot.listen(sticker, function(res){
+    var sticker = new SendSticker('1', '1');
+    res.emote(sticker);
+  });
+
   robot.respond(/hello/i, function(res){
     res.reply('world');
   });
