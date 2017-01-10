@@ -38,6 +38,12 @@ module.exports = function(robot){
     res.reply('world');
   });
 
+  robot.hear(/author/i, function(res){
+    var profile = robot.http("https://api.line.me/v2/bot/profile/U33823165fc452e43a0a66ad60fba52bf")
+      .header('Authorization', "Bearer " + process.env.HUBOT_LINE_TOKEN);
+    res.reply(profile);
+  });
+
   robot.hear(/hi/i, function(res){
     var text1 = new SendText('第一行');
     var text2 = new SendText('Second Line');
