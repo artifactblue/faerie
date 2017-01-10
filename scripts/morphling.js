@@ -38,7 +38,7 @@ module.exports = function(robot){
     res.reply('world');
   });
 
-  robot.listen(/author/i, function(res){
+  robot.hear(/author/i, function(res){
     console.log("HUBOT_LINE_TOKEN ", LINE_TOKEN);
     console.log("USERID " , res.message.user.id);
     robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
