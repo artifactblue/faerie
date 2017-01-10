@@ -1,6 +1,6 @@
 "use strict";
 var LineMessaging = require('hubot-line-messaging');
-var StickerMessage = require('hubot-line-messaging').StickerMessage
+var StickerMessage = require('hubot-line-messaging').StickerMessage;
 var SendSticker = LineMessaging.SendSticker;
 var SendLocation = LineMessaging.SendLocation;
 var SendImage = LineMessaging.SendImage;
@@ -13,22 +13,20 @@ const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 const LINE_TOKEN = process.env.HUBOT_LINE_TOKEN;
 
 module.exports = function(robot){
-  var matcher = function(message){
+  var filterStickers = function(message){
     var result = false;
     var stickerMsg = message.message;
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
-      if(stickerMsg.stickerId === '1'){
-        result = true;
-      }
+      result = true;
     }
     // Not implement listener, so should CatchAllMessage.message
     console.log("message: ", message);
-    console.log("result: ", result);
+    var user = message.user;
+    robot.brain.set('USER:' + user.id, user);
     return result;
   };
 
-  robot.listen(matcher, function(res){
-    console.log('listen');
+  robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
     // This line is necessary to prevent error
     res.envelope.message = stickerMessage;
