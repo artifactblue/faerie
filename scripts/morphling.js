@@ -38,10 +38,16 @@ module.exports = function(robot){
     res.reply('world');
   });
 
-  robot.hear(/author/i, function(res){
-    var profile = robot.http("https://api.line.me/v2/bot/profile/U33823165fc452e43a0a66ad60fba52bf")
-      .header('Authorization', "Bearer " + process.env.HUBOT_LINE_TOKEN);
-    res.reply(profile);
+  robot.listen(/author/i, function(res){
+    console.log("HUBOT_LINE_TOKEN ", LINE_TOKEN);
+    console.log("USERID " , res.message.user.id);
+    robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
+      .header('Authorization', "Bearer " + LINE_TOKEN)
+      .get()(function(err, resp, body) {
+        console.log(resp);
+        console.log(body)
+        res.reply(resp);
+      });
   });
 
   robot.hear(/hi/i, function(res){
