@@ -26,6 +26,13 @@ module.exports = function(robot){
     return result;
   };
 
+  var filterAuthor = function(message){
+    var result = false;
+    if (message.message.text == 'who am i') {
+      return true;
+    }
+  };
+
   robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
     // This line is necessary to prevent error
@@ -38,9 +45,10 @@ module.exports = function(robot){
     res.reply('world');
   });
 
-  robot.hear(/author/i, function(res){
-    var profile = robot.http("https://api.line.me/v2/bot/profile/U33823165fc452e43a0a66ad60fba52bf")
+  robot.listen(/author/i, function(res){
+    var profile = robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
       .header('Authorization', "Bearer " + process.env.HUBOT_LINE_TOKEN);
+    console.log(profile);
     res.reply(profile);
   });
 
