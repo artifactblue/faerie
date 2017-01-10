@@ -46,7 +46,7 @@ module.exports = function(robot){
       .get()(function(err, resp, body) {
         console.log(resp);
         console.log(body)
-        res.reply(resp);
+        res.reply(JSON.stringify(body));
       });
   });
 
