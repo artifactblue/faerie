@@ -83,3 +83,7 @@ heroku logs --tail
 2017-01-08T16:55:47.626168+00:00 app[web.1]:   done: false,
 2017-01-08T16:55:47.626168+00:00 app[web.1]:   room: undefined }
 ```
+
+### Line API list
+
+Reference : https://devdocs.line.me/en/#messaging-api
