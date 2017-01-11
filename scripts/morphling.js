@@ -46,7 +46,8 @@ module.exports = function(robot){
       .get()(function(err, resp, body) {
         console.log('RESP ', resp);
         console.log('BODY ', body);
-        res.reply('你好，' + resp.displayName + "，使用者ID " + res.message.user.id);
+        var respBody = JSON.parse(body);
+        res.reply('你好，' + respBody.displayName + "，使用者ID " + res.message.user.id);
       });
   });
 
@@ -88,15 +89,19 @@ module.exports = function(robot){
    */
   robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
-      .init('this is a carousel msg')
+      .init('Comic list')
       .carousel({
         thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
         title: '海賊王',
         text: '海賊王851話'
       })
       .action('uri', {
-        label: '海賊王',
+        label: '線上觀看',
         uri: 'https://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
+      })
+      .action('postback', {
+        lable: '訂閱[海賊王]',
+        data: 'subscribe=true&comic=2'
       })
       .carousel({
         thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/10.jpg',
@@ -104,8 +109,12 @@ module.exports = function(robot){
         text: '獵人360話'
       })
       .action('uri', {
-        label: '獵人',
+        label: '線上觀看',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
+      })
+      .action('postback', {
+        lable: '訂閱[獵人]',
+        data: 'subscribe=true&comic=10'
       })
       .carousel({
         thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/1.jpg',
@@ -113,8 +122,12 @@ module.exports = function(robot){
         text: '火影忍者博人傳08話'
       })
       .action('uri', {
-        label: '火影忍者',
+        label: '線上觀看',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
+      })
+      .action('postback', {
+        lable: '訂閱[火影忍者]',
+        data: 'subscribe=true&comic=1'
       })
       .build();
     res.reply(msg);
@@ -122,7 +135,7 @@ module.exports = function(robot){
 
   robot.hear(/subscribe/i, function(res){
     var msg = BuildTemplateMessage
-      .init('訂閱漫畫')
+      .init('Subscribe')
       .confirm({
         text: '訂閱海賊王?'
       })
