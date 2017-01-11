@@ -83,7 +83,7 @@ module.exports = function(robot){
     var msg = BuildTemplateMessage
       .init('this is a carousel msg')
       .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
         title: '海賊王',
         text: '海賊王'
       })
