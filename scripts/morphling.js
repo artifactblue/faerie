@@ -78,36 +78,43 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-
+  /**
+   * Image URL (Max: 1000 characters)
+   * HTTPS
+   * JPEG or PNG
+   * Aspect ratio: 1:1.51
+   * Max width: 1024px
+   * Max: 1 MB
+   */
   robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
       .init('this is a carousel msg')
       .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
         title: '海賊王',
-        text: '海賊王'
+        text: '海賊王851話'
       })
       .action('uri', {
         label: '海賊王',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
+        uri: 'https://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
       })
       .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/10.jpg',
         title: '獵人',
-        text: '獵人'
+        text: '獵人360話'
       })
       .action('uri', {
         label: '獵人',
-        uri: 'https://www.google.com.tw/'
+        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
       })
       .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/1.jpg',
         title: '火影忍者',
-        text: '火影忍者'
+        text: '火影忍者博人傳08話'
       })
       .action('uri', {
         label: '火影忍者',
-        uri: 'https://www.google.com.tw/'
+        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
       })
       .build();
     res.reply(msg);
