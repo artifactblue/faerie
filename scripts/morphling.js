@@ -85,7 +85,7 @@ module.exports = function(robot){
       .carousel({
         thumbnailImageUrl: 'http://static.fzdm.com/manhua/10.jpg',
         title: '獵人',
-        text: '最新：獵人360話'
+        text: '獵人360話'
       })
       .action('uri', {
         label: '獵人',
@@ -94,7 +94,7 @@ module.exports = function(robot){
       .carousel({
         thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
         title: '海賊王',
-        text: '最新：海賊王851話'
+        text: '海賊王851話'
       })
       .action('uri', {
         label: '海賊王',
