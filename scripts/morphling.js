@@ -83,13 +83,13 @@ module.exports = function(robot){
     var msg = BuildTemplateMessage
       .init('this is a carousel msg')
       .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
+        thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
         title: '海賊王',
         text: '海賊王'
       })
       .action('uri', {
         label: '海賊王',
-        uri: 'https://www.google.com.tw/'
+        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
       })
       .carousel({
         thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
