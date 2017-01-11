@@ -37,6 +37,14 @@ heroku config:add LINE_CHANNEL_SECRET=${CHANNEL_SECRET}
 heroku config:add HUBOT_HEROKU_KEEPALIVE_URL=
 ```
 
+### Heroku-Redis
+
+Reference: https://devcenter.heroku.com/articles/heroku-redis
+
+```
+heroku redis:cli -a {app} -c {app}
+```
+
 ### Debug on Heroku
 
 ```
