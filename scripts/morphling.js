@@ -81,24 +81,33 @@ module.exports = function(robot){
 
   robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
-      .init('漫畫清單')
+      .init('this is a carousel msg')
       .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/10.jpg',
-        title: '獵人',
-        text: '獵人360話'
-      })
-      .action('uri', {
-        label: '獵人',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
-      })
-      .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
         title: '海賊王',
-        text: '海賊王851話'
+        text: '海賊王'
       })
       .action('uri', {
         label: '海賊王',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
+        uri: 'https://www.google.com.tw/'
+      })
+      .carousel({
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        title: '獵人',
+        text: '獵人'
+      })
+      .action('uri', {
+        label: '獵人',
+        uri: 'https://www.google.com.tw/'
+      })
+      .carousel({
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        title: '火影忍者',
+        text: '火影忍者'
+      })
+      .action('uri', {
+        label: '火影忍者',
+        uri: 'https://www.google.com.tw/'
       })
       .build();
     res.reply(msg);
