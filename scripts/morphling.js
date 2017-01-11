@@ -38,22 +38,24 @@ module.exports = function(robot){
     res.reply('world');
   });
 
-  robot.hear(/個人資料/i, function(res){
+  robot.hear(/profile/i, function(res){
     console.log("HUBOT_LINE_TOKEN ", LINE_TOKEN);
     console.log("USERID " , res.message.user.id);
     robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .get()(function(err, resp, body) {
-        res.reply('你是' + body.displayName + "，使用者ID " + body.userId);
+        console.log('RESP ', resp);
+        console.log('BODY ', body);
+        res.reply('你好，' + resp.displayName + "，使用者ID " + res.message.user.id);
       });
   });
 
   robot.hear(/help/i, function(res){
-    var text1 = new SendText('輸入 [訂閱海賊王]，即可享受訂閱推播服務');
-    var text2 = new SendText('輸入 [漫畫清單]，即可顯示Top 3推薦漫畫');
-    var text3 = new SendText('輸入 [個人資料]，顯示個人資訊');
+    var text1 = new SendText('輸入 [subscribe]，即可享受訂閱推播服務');
+    var text2 = new SendText('輸入 [list]，即可顯示Top 3推薦漫畫');
+    var text3 = new SendText('輸入 [profile]，顯示個人資訊');
 
-    res.reply(text1, text2);
+    res.reply(text1, text2, text3);
   });
 
   robot.hear(/buttons/i, function(res){
@@ -76,54 +78,63 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/訂閱海賊王/i, function(res){
+  /**
+   * Image URL (Max: 1000 characters)
+   * HTTPS
+   * JPEG or PNG
+   * Aspect ratio: 1:1.51
+   * Max width: 1024px
+   * Max: 1 MB
+   */
+  robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
-      .init('訂閱漫畫')
-      .confirm({
-        text: '是否訂閱海賊王?'
+      .init('this is a carousel msg')
+      .carousel({
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
+        title: '海賊王',
+        text: '海賊王851話'
       })
       .action('uri', {
-        label: '訂閱',
-        data: 'subscription'
-        //uri: 'https://www.google.com.tw/search?q=ok'
+        label: '海賊王',
+        uri: 'https://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
       })
-      .action('message', {
-        label: '取消',
-        data: 'cancel'
-      })
-      .build();
-    res.reply(msg);
-  });
-
-  robot.hear(/漫畫清單/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('漫畫清單')
       .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/10.jpg',
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/10.jpg',
         title: '獵人',
-        text: '最新：獵人360話'
+        text: '獵人360話'
       })
       .action('uri', {
         label: '獵人',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
       })
       .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
-        title: '海賊王',
-        text: '最新：海贼王851話'
-      })
-      .action('uri', {
-        label: '海賊王',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
-      })
-      .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/01.jpg',
+        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/1.jpg',
         title: '火影忍者',
-        text: '最新：火影忍者傳人傳08話'
+        text: '火影忍者博人傳08話'
       })
       .action('uri', {
         label: '火影忍者',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
+      })
+      .build();
+    res.reply(msg);
+  });
+
+  robot.hear(/subscribe/i, function(res){
+    var msg = BuildTemplateMessage
+      .init('訂閱漫畫')
+      .confirm({
+        text: '訂閱海賊王?'
+      })
+      .action('postback', {
+        label: '訂閱',
+        //data: 'subscribe=true&comic=02'
+        text: '訂閱成功'
+        //uri: 'https://www.google.com.tw/search?q=ok'
+      })
+      .action('message', {
+        label: '取消',
+        text: '太可惜了'
       })
       .build();
     res.reply(msg);
