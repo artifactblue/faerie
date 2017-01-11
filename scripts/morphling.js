@@ -78,24 +78,6 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/subscribe/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('訂閱漫畫')
-      .confirm({
-        text: '是否訂閱海賊王?'
-      })
-      .action('uri', {
-        label: '訂閱',
-        data: 'subscription'
-        //uri: 'https://www.google.com.tw/search?q=ok'
-      })
-      .action('message', {
-        label: '取消',
-        data: 'cancel'
-      })
-      .build();
-    res.reply(msg);
-  });
 
   robot.hear(/comic/i, function(res){
     var msg = BuildTemplateMessage
@@ -126,6 +108,25 @@ module.exports = function(robot){
       .action('uri', {
         label: '火影忍者',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
+      })
+      .build();
+    res.reply(msg);
+  });
+
+  robot.hear(/subscribe/i, function(res){
+    var msg = BuildTemplateMessage
+      .init('訂閱漫畫')
+      .confirm({
+        text: '訂閱海賊王?'
+      })
+      .action('postback', {
+        label: '訂閱',
+        data: 'subscribe=true&comic=02'
+        //uri: 'https://www.google.com.tw/search?q=ok'
+      })
+      .action('message', {
+        label: '取消',
+        text: '太可惜了'
       })
       .build();
     res.reply(msg);
