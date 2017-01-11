@@ -38,22 +38,24 @@ module.exports = function(robot){
     res.reply('world');
   });
 
-  robot.hear(/個人資料/i, function(res){
+  robot.hear(/profile/i, function(res){
     console.log("HUBOT_LINE_TOKEN ", LINE_TOKEN);
     console.log("USERID " , res.message.user.id);
     robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .get()(function(err, resp, body) {
-        res.reply('你是' + body.displayName + "，使用者ID " + body.userId);
+        console.log('RESP ', resp);
+        console.log('BODY ', body);
+        res.reply('你好，' + resp.displayName + "，使用者ID " + res.message.user.id);
       });
   });
 
   robot.hear(/help/i, function(res){
-    var text1 = new SendText('輸入 [訂閱海賊王]，即可享受訂閱推播服務');
-    var text2 = new SendText('輸入 [漫畫清單]，即可顯示Top 3推薦漫畫');
-    var text3 = new SendText('輸入 [個人資料]，顯示個人資訊');
+    var text1 = new SendText('輸入 [subscribe]，即可享受訂閱推播服務');
+    var text2 = new SendText('輸入 [list]，即可顯示Top 3推薦漫畫');
+    var text3 = new SendText('輸入 [profile]，顯示個人資訊');
 
-    res.reply(text1, text2);
+    res.reply(text1, text2, text3);
   });
 
   robot.hear(/buttons/i, function(res){
@@ -76,7 +78,7 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/訂閱海賊王/i, function(res){
+  robot.hear(/subscribe/i, function(res){
     var msg = BuildTemplateMessage
       .init('訂閱漫畫')
       .confirm({
@@ -95,7 +97,7 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/漫畫清單/i, function(res){
+  robot.hear(/comic/i, function(res){
     var msg = BuildTemplateMessage
       .init('漫畫清單')
       .carousel({
