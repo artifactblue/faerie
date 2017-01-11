@@ -100,7 +100,7 @@ module.exports = function(robot){
         uri: 'https://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
       })
       .action('postback', {
-        lable: '訂閱[海賊王]',
+        label: '訂閱[海賊王]',
         data: 'subscribe=true&comic=2'
       })
       .carousel({
@@ -113,7 +113,7 @@ module.exports = function(robot){
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
       })
       .action('postback', {
-        lable: '訂閱[獵人]',
+        label: '訂閱[獵人]',
         data: 'subscribe=true&comic=10'
       })
       .carousel({
@@ -126,7 +126,7 @@ module.exports = function(robot){
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
       })
       .action('postback', {
-        lable: '訂閱[火影忍者]',
+        label: '訂閱[火影忍者]',
         data: 'subscribe=true&comic=1'
       })
       .build();
