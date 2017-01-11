@@ -79,7 +79,7 @@ module.exports = function(robot){
   });
 
 
-  robot.hear(/comic/i, function(res){
+  robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
       .init('漫畫清單')
       .carousel({
@@ -94,20 +94,11 @@ module.exports = function(robot){
       .carousel({
         thumbnailImageUrl: 'http://static.fzdm.com/manhua/02.jpg',
         title: '海賊王',
-        text: '最新：海贼王851話'
+        text: '最新：海賊王851話'
       })
       .action('uri', {
         label: '海賊王',
         uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
-      })
-      .carousel({
-        thumbnailImageUrl: 'http://static.fzdm.com/manhua/01.jpg',
-        title: '火影忍者',
-        text: '最新：火影忍者傳人傳08話'
-      })
-      .action('uri', {
-        label: '火影忍者',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
       })
       .build();
     res.reply(msg);
@@ -121,7 +112,8 @@ module.exports = function(robot){
       })
       .action('postback', {
         label: '訂閱',
-        data: 'subscribe=true&comic=02'
+        //data: 'subscribe=true&comic=02'
+        text: '訂閱成功'
         //uri: 'https://www.google.com.tw/search?q=ok'
       })
       .action('message', {
