@@ -115,31 +115,44 @@ module.exports = function(robot){
     var comicList = comic.readAll().then(function(result){
       var msgObj = BuildTemplateMessage.init('Comic list');
       result.rows.forEach(function(data){
-        console.log('comic data', data);
-        msgObj = msgCarousel(msgObj, data);
+        //console.log('comic data', data);
+        msgObj.carousel({
+          thumbnailImageUrl: data.thumbnail,
+          title: data.comicname,
+          text: data.lastvolnumber
+        })
+        .action('postback', {
+          label: '線上觀看',
+          data: 'viewOnline'
+        })
+        .action('postback', {
+          label: '訂閱[' + data.comicname + ']',
+          data: 'subscribe'
+        });
+        console.log('msgObj: ', msgObj);
       });
       msgObj.build();
       res.reply(msgObj);
     });
   });
 
-  function msgCarousel(msgObj, data){
-    msgObj.carousel({
-      thumbnailImageUrl: data.thumbnail,
-      title: data.comicname,
-      text: data.lastvolnumber
-    })
-    .action('postback', {
-      label: '線上觀看',
-      data: 'viewOnline'
-    })
-    .action('postback', {
-      label: '訂閱[' + data.comicname + ']',
-      data: 'subscribe'
-    });
-    console.log('msgObj: ', msgObj);
-    return msgObj;
-  }
+  // function msgCarousel(msgObj, data){
+  //   msgObj.carousel({
+  //     thumbnailImageUrl: data.thumbnail,
+  //     title: data.comicname,
+  //     text: data.lastvolnumber
+  //   })
+  //   .action('postback', {
+  //     label: '線上觀看',
+  //     data: 'viewOnline'
+  //   })
+  //   .action('postback', {
+  //     label: '訂閱[' + data.comicname + ']',
+  //     data: 'subscribe'
+  //   });
+  //   console.log('msgObj: ', msgObj);
+  //   return msgObj;
+  // }
 
   robot.hear(/subscribe/i, function(res){
     var msg = BuildTemplateMessage
