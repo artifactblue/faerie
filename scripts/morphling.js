@@ -9,6 +9,27 @@ var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
 
+// 3rd party libs
+var imgur = require('imgur');
+var Promise = require("bluebird");
+
+function uploadImages (respBody) {
+  for(var index in respBody){
+    var imgUrl = respBody[index].images;
+
+    imgur.uploadUrl(imgUrl)
+        .then(function (json) {
+            var imgurUrl = json.data.link;
+            imgurUrl = imgurUrl.replace(/^http:\/\//i, 'https://');
+            // image.push(new SendImage(imgurUrl, imgurUrl));
+            sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')";
+        })
+        .catch(function (err) {
+            console.error(err.message);
+        });
+  }
+}
+
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 
 const LINE_TOKEN = process.env.HUBOT_LINE_TOKEN;
@@ -154,6 +175,29 @@ module.exports = function(robot){
       })
       .build();
     res.reply(msg);
+  });
+
+  robot.hear(/show (.*) (.*)/i, function(res){
+    // var imgae = SendImage();
+    var comic = res.match[1];
+    var vol = res.match[2];
+    var sendImageString = "";
+    // Fetch from comicr node service api
+    robot.http("https://mighty-spire-72176.herokuapp.com/api/" + comic + "/" + vol)
+      .get()(function(err, resp, body) {
+        var respBody = JSON.parse(body);
+        // var image = [];
+
+       Promise.promisify(uploadImages(respBody))
+       .then(function(){
+          eval("res.reply(sendImageString);");
+          console.log("#######", sendImageString);
+        })
+       .catch(function(err) {
+          res.status(500).send(err);
+        });
+      });
+
   });
 
   robot.hear(/subscribe/i, function(res){
