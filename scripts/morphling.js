@@ -128,10 +128,9 @@ module.exports = function(robot){
         .action('postback', {
           label: '訂閱[' + data.comicname + ']',
           data: 'subscribe'
-        });
+        }).build();
         console.log('msgObj: ', msgObj);
       });
-      msgObj.build();
       res.reply(msgObj);
     });
   });
