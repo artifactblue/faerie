@@ -1,0 +1,12 @@
+export HUBOT_HEROKU_KEEPALIVE_URL=https://2919a97d.ngrok.io
+export HUBOT_LINE_CHANNEL_ID=1495584574
+export HUBOT_LINE_TOKEN=zpnislGySE2vnTLF+mKp8dFasHagKRCcpcRba0eSkGbFtu08FD1oIig6bBBASF4wILzEsUDLPT8vYeNj3O8uQnCnwr9Dw5vBLqnVS71r5OKFXVThoQUtPgqwaxhrNK2EdgBmX2+r841jrdyhuh3KFgdB04t89/1O/w1cDnyilFU=
+export HUBOT_NAME=morphling
+export LINE_CHANNEL_SECRET=d0456c256126ec763f9c689d50a86488
+export DATABASE_URL=postgres://pxxdhegphjjhzb:283811f5220604d918a90b3f752ce05204ec9d2f93bfe5566ce352d5e7055919@ec2-54-235-177-45.compute-1.amazonaws.com:5432/dcih128pf9gh15
+export REDIS_URL=redis://h:p413cebd732fb94b7937501669c043de295fed6bd97d063253c228060c90a6d96@ec2-107-22-239-248.compute-1.amazonaws.com:14269
+export PGUSER=pxxdhegphjjhzb
+export PGDATABASE=dcih128pf9gh15
+export PGPASSWORD=283811f5220604d918a90b3f752ce05204ec9d2f93bfe5566ce352d5e7055919
+export PGPORT=5432
+export PGHOST=ec2-54-235-177-45.compute-1.amazonaws.com
