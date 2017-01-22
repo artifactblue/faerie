@@ -45,6 +45,30 @@ Reference: https://devcenter.heroku.com/articles/heroku-redis
 heroku redis:cli -a {app} -c {app}
 ```
 
+### Debug on Localhost
+
+```
+-- use localhost setting
+export HUBOT_HEROKU_KEEPALIVE_URL=https://2919a97d.ngrok.io
+export HUBOT_LINE_CHANNEL_ID=
+export HUBOT_LINE_TOKEN=
+export HUBOT_NAME=morphling
+export LINE_CHANNEL_SECRET=
+export DATABASE_URL=
+export REDIS_URL=
+```
+
+```
+-- install ngork
+npm install ngrok -g
+-- hubot default port 8080
+ngrok http 8080
+-- copy ngork https to line webhook
+
+-- run morphling
+bin/hubot -a line-messaging-api
+```
+
 ### Debug on Heroku
 
 ```
