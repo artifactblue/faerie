@@ -6,7 +6,7 @@ Line bot API for creating evenything
 
 - Adapter
   - Hubot
-  - Hubot-line-messaging
+  - Hubot-line-messaging-api
 
 - Server
   - Heroku
