@@ -1,6 +1,7 @@
 "use strict";
-var LineMessaging = require('hubot-line-messaging');
-var StickerMessage = require('hubot-line-messaging').StickerMessage;
+var LineMessaging = require('hubot-line-messaging-api');
+var StickerMessage = require('hubot-line-messaging-api').StickerMessage;
+var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
 var SendSticker = LineMessaging.SendSticker;
 var SendLocation = LineMessaging.SendLocation;
 var SendImage = LineMessaging.SendImage;
@@ -20,11 +21,31 @@ module.exports = function(robot){
       result = true;
     }
     // Not implement listener, so should CatchAllMessage.message
-    console.log("message: ", message);
+    //console.log("message: ", message);
     var user = message.user;
     robot.brain.set('USER:' + user.id, user);
     return result;
   };
+
+  var filterPostback = function(message){
+    var result = false;
+    var postbackMsg = message.message;
+    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+      result = true;
+      
+      // TODO save to database
+    }
+    console.log('filterPostback', result);
+    return result;
+  }
+
+  robot.listen(filterPostback, function(res){
+    console.log('reply postback');
+    // push API
+
+    var text = new SendText('已訂閱完成，謝謝');
+    res.reply(text);
+  });
 
   robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
@@ -73,7 +94,7 @@ module.exports = function(robot){
       })
       .action('uri', {
         label: 'Adapter Link',
-        uri: 'https://github.com/puresmash/hubot-line-messaging'
+        uri: 'https://www.google.com.tw/'
       })
       .build();
     res.reply(msg);
