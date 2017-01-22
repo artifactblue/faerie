@@ -120,22 +120,22 @@ module.exports = function(robot){
         msgObj = msgCarousel(msgObj, data);
       });
       msgObj.build();
-      res.reply(msg);
+      res.reply(msgObj);
     });
   });
 
   function msgCarousel(msgObj, data){
     return msgObj.carousel({
-      thumbnailImageUrl: 'https:' + data.thumbnail,
-      title: data.comicName,
-      text: data.lastVolNumber
+      thumbnailImageUrl: data.thumbnail,
+      title: data.comicname,
+      text: data.lastVolnumber
     })
     .action('postback', {
       label: '線上觀看',
       data: 'viewOnline'
     })
     .action('postback', {
-      label: '訂閱[' + data.comicName + ']',
+      label: '訂閱[' + data.comicname + ']',
       data: 'subscribe'
     });
   }
