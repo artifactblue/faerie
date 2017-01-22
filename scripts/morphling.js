@@ -8,6 +8,7 @@ var SendImage = LineMessaging.SendImage;
 var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
+var comic = require('../db/models/comic.js');
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 
@@ -32,7 +33,7 @@ module.exports = function(robot){
     var postbackMsg = message.message;
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
       result = true;
-      
+
       // TODO save to database
     }
     console.log('filterPostback', result);
@@ -111,50 +112,32 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('Comic list')
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
-        title: '海賊王',
-        text: '海賊王852話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=852'
-      })
-      .action('postback', {
-        label: '訂閱[海賊王]',
-        data: 'subscribe=true&comic=2'
-      })
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/10.jpg',
-        title: '獵人',
-        text: '獵人360話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
-      })
-      .action('postback', {
-        label: '訂閱[獵人]',
-        data: 'subscribe=true&comic=10'
-      })
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/1.jpg',
-        title: '火影忍者',
-        text: '火影忍者博人傳08話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
-      })
-      .action('postback', {
-        label: '訂閱[火影忍者]',
-        data: 'subscribe=true&comic=1'
-      })
-      .build();
-    res.reply(msg);
+    var msgObj = BuildTemplateMessage
+      .init('Comic list');
+    var comicList = comic.readAll().then(function(result){
+      result.rows.forEach(function(data){
+        msgObj = msgCarousel(msgObj, data);
+      });
+      msbObj.build();
+      res.reply(msg);
+    });
   });
+
+  function msgCarousel(msgObj, data){
+    return msgObj.carousel({
+      thumbnailImageUrl: 'https:' + data.thumbnail,
+      title: data.comicName,
+      text: data.lastVolNumber
+    })
+    .action('postback', {
+      label: '線上觀看',
+      data: 'viewOnline'
+    })
+    .action('postback', {
+      label: '訂閱[' + data.comicName + ']',
+      data: 'subscribe'
+    });
+  }
 
   robot.hear(/subscribe/i, function(res){
     var msg = BuildTemplateMessage
