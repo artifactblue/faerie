@@ -1,0 +1,3 @@
+INSERT INTO Comic (id, comicName, lastVolNumber, thumbnail, createTimestamp) VALUES (2, '海賊王', '852話', 'https://static.fzdm.com/manhua/img/2.jpg', now());
+INSERT INTO Comic (id, comicName, lastVolNumber, thumbnail, createTimestamp) VALUES (1, '火影忍者', '博人傳08話', 'https://static.fzdm.com/manhua/img/1.jpg', now());
+INSERT INTO Comic (id, comicName, lastVolNumber, thumbnail, createTimestamp) VALUES (10, '獵人', '360話', 'https://static.fzdm.com/manhua/img/10.jpg', now());

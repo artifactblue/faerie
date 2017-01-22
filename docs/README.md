@@ -28,6 +28,20 @@ https://business.line.me/zh-hant/services/bot
 Webhook URL: heroku host name
 ```
 
+### Postgres settings
+
+```
+-- install postgres
+homebrew install postgres
+
+-- set DATABASE_URL
+export DATABASE_URL=postgres://...
+
+-- connect to postgres on heroku
+heroku pg:psql DATABASE_URL --app morphling
+
+```
+
 ### Heroku settings
 
 ```
