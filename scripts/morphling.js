@@ -112,9 +112,8 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
-    var msgObj = BuildTemplateMessage
-      .init('Comic list');
     var comicList = comic.readAll().then(function(result){
+      var msgObj = BuildTemplateMessage.init('Comic list');
       result.rows.forEach(function(data){
         console.log('comic data', data);
         msgObj = msgCarousel(msgObj, data);
@@ -125,10 +124,10 @@ module.exports = function(robot){
   });
 
   function msgCarousel(msgObj, data){
-    return msgObj.carousel({
+    msgObj.carousel({
       thumbnailImageUrl: data.thumbnail,
       title: data.comicname,
-      text: data.lastVolnumber
+      text: data.lastvolnumber
     })
     .action('postback', {
       label: '線上觀看',
@@ -138,6 +137,8 @@ module.exports = function(robot){
       label: '訂閱[' + data.comicname + ']',
       data: 'subscribe'
     });
+    console.log('msgObj: ', msgObj);
+    return msgObj;
   }
 
   robot.hear(/subscribe/i, function(res){
