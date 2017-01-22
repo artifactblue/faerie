@@ -116,9 +116,10 @@ module.exports = function(robot){
       .init('Comic list');
     var comicList = comic.readAll().then(function(result){
       result.rows.forEach(function(data){
+        console.log('comic data', data);
         msgObj = msgCarousel(msgObj, data);
       });
-      msbObj.build();
+      msgObj.build();
       res.reply(msg);
     });
   });
