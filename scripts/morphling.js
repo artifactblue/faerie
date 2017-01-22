@@ -95,11 +95,11 @@ module.exports = function(robot){
       .carousel({
         thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
         title: '海賊王',
-        text: '海賊王851話'
+        text: '海賊王852話'
       })
       .action('uri', {
         label: '線上觀看',
-        uri: 'https://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=851'
+        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=852'
       })
       .action('postback', {
         label: '訂閱[海賊王]',
