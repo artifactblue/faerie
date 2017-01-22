@@ -86,6 +86,8 @@ module.exports = function(robot){
    * Aspect ratio: 1:1.51
    * Max width: 1024px
    * Max: 1 MB
+   *
+   * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
     var msg = BuildTemplateMessage
