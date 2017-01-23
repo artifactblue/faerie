@@ -1,1 +1,1 @@
-web: bin/hubot -a line-messaging-api
+web: bin/hubot -a line-messaging
