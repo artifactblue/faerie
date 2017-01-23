@@ -8,7 +8,7 @@ var SendImage = LineMessaging.SendImage;
 var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
-var comic = require('../db/models/comic.js');
+//var comic = require('../db/models/comic.js');
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 
@@ -84,7 +84,7 @@ module.exports = function(robot){
   robot.hear(/buttons/i, function(res){
     var msg = BuildTemplateMessage
       .init('this is a template msg')
-      .buttons({
+      msg.buttons({
         thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
         title: 'Template Message',
         text: 'Let me google for you'
@@ -96,8 +96,8 @@ module.exports = function(robot){
       .action('uri', {
         label: 'Adapter Link',
         uri: 'https://www.google.com.tw/'
-      })
-      .build();
+      });
+      msg.build();
     res.reply(msg);
   });
 
@@ -112,11 +112,11 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
-    var comicList = comic.readAll().then(function(result){
+    //var comicList = comic.readAll().then(function(result){
       // var msgObj = BuildTemplateMessage.init('Comic list');
       // var count = 0;
-      result.rows.forEach(function(data){
-        console.log('comic data', data);
+      // result.rows.forEach(function(data){
+        // console.log('comic data', data);
       //   if (count == 0) {
       //     msgObj = BuildTemplateMessage.init('Comic list')
       //     .carousel({
@@ -150,10 +150,10 @@ module.exports = function(robot){
       //   }
       //   count++;
       //   console.log('count: ' + count + ', msgObj: ', msgObj);
-      });
+      // });
       // msgObj.build();
       res.reply("yes");
-    });
+    // });
   });
 
   // function msgCarousel(msgObj, data){
@@ -191,7 +191,6 @@ module.exports = function(robot){
         text: '太可惜了'
       })
       .build();
-    console.log(msg);
     res.reply(msg);
   });
 };
