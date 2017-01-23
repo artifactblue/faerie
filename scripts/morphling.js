@@ -227,12 +227,13 @@ module.exports = function(robot){
           {
             "type": "postback",
             "label": "訂閱[" + data.comicname + "]",
-            "data": "action=subscrbe&comic=" + data.id
+            "data": "action=subscribe&comic=" + data.id
           }
         ]
       };
       columns.push(carousel);
     });
+    console.log(columns);
     var obj = {
       "type": "template",
       "altText": altText,
