@@ -113,7 +113,8 @@ module.exports = function(robot){
    */
   robot.hear(/list/i, function(res){
     var comicList = comic.readAll().then(function(result){
-      var msgObj = BuildTemplateMessage.init('Comic list');
+      var msgObj = BuildTemplateMessage;
+      msgObj.init('Comic list');
       result.rows.forEach(function(data){
         //console.log('comic data', data);
         msgObj.carousel({
