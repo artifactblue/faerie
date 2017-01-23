@@ -18,9 +18,6 @@ module.exports = function(robot){
   var filterStickers = function(message){
     var result = false;
     var stickerMsg = message.message;
-    if (message.message && message.message.type && message.message.type === 'postback') {
-      console.log(message.message);
-    }
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
       result = true;
     }
@@ -35,19 +32,21 @@ module.exports = function(robot){
     var result = false;
     var postbackMsg = message.message;
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+      console.log(message.message);
       result = true;
       // TODO save to database
     }
-    console.log('filterPostback', result);
+    //console.log('filterPostback', result);
     return result;
   }
 
   robot.listen(filterPostback, function(res){
-    console.log('reply postback');
+    //console.log('reply postback');
     // push API
-    console.log(res);
+    //console.log(res);
     //var text = new SendText('已訂閱完成，謝謝');
-    res.reply(text);
+    //res.reply(text);
+    console.log(res.message.message.postback);
   });
 
   robot.listen(filterStickers, function(res){
@@ -60,10 +59,6 @@ module.exports = function(robot){
 
   robot.respond(/hello/i, function(res){
     res.reply('world');
-  });
-
-  robot.respond(/test=a&p=b/i, function(res){
-    console.log('postback call');
   });
 
   robot.hear(/profile/i, function(res){
