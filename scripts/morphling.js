@@ -207,27 +207,14 @@ module.exports = function(robot){
 
   robot.hear(/test/i, function(res){
     var comicList = comic.readAll().then(function(result){
-      res.reply(buildCarousel("comic list", buildCarouselColumns(result)));
+      res.reply(buildCarousel("comic list", result));
     });
   });
 
-  function buildCarousel(altText, columns) {
-    var obj = {
-      "type": "template",
-      "altText": altText,
-      "template": {
-          "type": "carousel",
-          "columns": columns
-      }
-    }
-    console.log('obj', obj);
-    return obj;
-  }
-
-  function buildCarouselColumns(result) {
+  function buildCarousel(altText, result) {
     var columns = [];
     result.rows.forEach(function(data){
-      var actions = {
+      var carousel = {
         "thumbnailImageUrl": data.thumbnail,
         "title": data.comicname,
         "text": data.lastvolnumber,
@@ -244,10 +231,44 @@ module.exports = function(robot){
           }
         ]
       };
-      columns.push(actions);
+      columns.push(carousel);
     });
-    return columns;
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "carousel",
+          "columns": columns
+      }
+    }
+    console.log('obj', obj);
+    return obj;
   }
+
+  // function buildCarouselColumns(result) {
+  //   var columns = [];
+  //   result.rows.forEach(function(data){
+  //     var carousel = {
+  //       "thumbnailImageUrl": data.thumbnail,
+  //       "title": data.comicname,
+  //       "text": data.lastvolnumber,
+  //       "actions": [
+  //         {
+  //           "type": "url",
+  //           "label": "線上觀看",
+  //           "uri": "https://github.com/Ksetra/morphling"
+  //         },
+  //         {
+  //           "type": "postback",
+  //           "label": "訂閱[" + data.comicname + "]",
+  //           "data": "action=subscrbe&comic=" + data.id
+  //         }
+  //       ]
+  //     };
+  //     columns.push(carousel);
+  //   });
+  //   return columns;
+  // }
 
   // function msgCarousel(msgObj, data){
   //   msgObj.carousel({
