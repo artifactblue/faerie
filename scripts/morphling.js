@@ -1,14 +1,14 @@
 "use strict";
 var LineMessaging = require('hubot-line-messaging-api');
 var StickerMessage = require('hubot-line-messaging-api').StickerMessage;
-//var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
+var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
 var SendSticker = LineMessaging.SendSticker;
 var SendLocation = LineMessaging.SendLocation;
 var SendImage = LineMessaging.SendImage;
 var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
-//var comic = require('../db/models/comic.js');
+var comic = require('../db/models/comic.js');
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 
@@ -204,6 +204,67 @@ module.exports = function(robot){
       // res.reply("yes");
     // });
   });
+
+  robot.hear(/test/i, function(res){
+    res.reply(buildCarousel());
+  });
+
+  function buildCarousel() {
+    var obj = {
+      "type": "template",
+      "altText": "this is a carousel template",
+      "template": {
+          "type": "carousel",
+          "columns": [
+              {
+                "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
+                "title": "this is menu",
+                "text": "description",
+                "actions": [
+                    {
+                        "type": "postback",
+                        "label": "Buy",
+                        "data": "action=buy&itemid=111"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "Add to cart",
+                        "data": "action=add&itemid=111"
+                    },
+                    {
+                        "type": "uri",
+                        "label": "View detail",
+                        "uri": "http://example.com/page/111"
+                    }
+                ]
+              },
+              {
+                "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+                "title": "this is menu",
+                "text": "description",
+                "actions": [
+                    {
+                        "type": "postback",
+                        "label": "Buy",
+                        "data": "action=buy&itemid=222"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "Add to cart",
+                        "data": "action=add&itemid=222"
+                    },
+                    {
+                        "type": "uri",
+                        "label": "View detail",
+                        "uri": "http://example.com/page/222"
+                    }
+                ]
+              }
+          ]
+      }
+    }
+    return obj;
+  }
 
   // function msgCarousel(msgObj, data){
   //   msgObj.carousel({
