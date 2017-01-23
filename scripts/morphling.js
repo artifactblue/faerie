@@ -28,25 +28,25 @@ module.exports = function(robot){
     return result;
   };
 
-  var filterPostback = function(message){
-    var result = false;
-    var postbackMsg = message.message;
-    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
-      result = true;
+  // var filterPostback = function(message){
+  //   var result = false;
+  //   var postbackMsg = message.message;
+  //   if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+  //     result = true;
 
-      // TODO save to database
-    }
-    console.log('filterPostback', result);
-    return result;
-  }
+  //     // TODO save to database
+  //   }
+  //   console.log('filterPostback', result);
+  //   return result;
+  // }
 
-  robot.listen(filterPostback, function(res){
-    console.log('reply postback');
-    // push API
+  // robot.listen(filterPostback, function(res){
+  //   console.log('reply postback');
+  //   // push API
 
-    var text = new SendText('已訂閱完成，謝謝');
-    res.reply(text);
-  });
+  //   var text = new SendText('已訂閱完成，謝謝');
+  //   res.reply(text);
+  // });
 
   robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
@@ -113,20 +113,7 @@ module.exports = function(robot){
    */
   robot.hear(/list/i, function(res){
     var comicList = comic.readAll().then(function(result){
-      var msgObj = BuildTemplateMessage.init('Comic list')
-        carousel({
-          thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
-          title: '海賊王',
-          text: '852話'
-        })
-        .action('postback', {
-          label: '線上觀看',
-          data: 'viewOnline'
-        })
-        .action('postback', {
-          label: '訂閱[海賊王]',
-          data: 'subscribe'
-        }).build();
+      var msgObj = BuildTemplateMessage.init('Comic list');
       // var count = 0;
       // result.rows.forEach(function(data){
       //   //console.log('comic data', data);
@@ -164,7 +151,7 @@ module.exports = function(robot){
       //   count++;
       //   console.log('count: ' + count + ', msgObj: ', msgObj);
       // });
-      // msgObj.build();
+      msgObj.build();
       res.reply(msgObj);
     });
   });
@@ -204,6 +191,7 @@ module.exports = function(robot){
         text: '太可惜了'
       })
       .build();
+    console.log(msg);
     res.reply(msg);
   });
 };
