@@ -18,7 +18,7 @@ module.exports = function(robot){
   var filterStickers = function(message){
     var result = false;
     var stickerMsg = message.message;
-    if (message.message.type === 'postback') {
+    if (message.message && message.message.type && message.message.type === 'postback') {
       console.log(message.message);
     }
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
@@ -31,25 +31,24 @@ module.exports = function(robot){
     return result;
   };
 
-  // var filterPostback = function(message){
-  //   var result = false;
-  //   var postbackMsg = message.message;
-  //   if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
-  //     result = true;
+  var filterPostback = function(message){
+    var result = false;
+    var postbackMsg = message.message;
+    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+      result = true;
+      // TODO save to database
+    }
+    console.log('filterPostback', result);
+    return result;
+  }
 
-  //     // TODO save to database
-  //   }
-  //   console.log('filterPostback', result);
-  //   return result;
-  // }
-
-  // robot.listen(filterPostback, function(res){
-  //   console.log('reply postback');
-  //   // push API
-
-  //   var text = new SendText('已訂閱完成，謝謝');
-  //   res.reply(text);
-  // });
+  robot.listen(filterPostback, function(res){
+    console.log('reply postback');
+    // push API
+    console.log(res);
+    //var text = new SendText('已訂閱完成，謝謝');
+    res.reply(text);
+  });
 
   robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
@@ -61,6 +60,10 @@ module.exports = function(robot){
 
   robot.respond(/hello/i, function(res){
     res.reply('world');
+  });
+
+  robot.respond(/test=a&p=b/i, function(res){
+    console.log('postback call');
   });
 
   robot.hear(/profile/i, function(res){
