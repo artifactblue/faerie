@@ -143,7 +143,7 @@ module.exports = function(robot){
     })
     .action('postback', {
         label: 'subscribe',
-        data: ''
+        data: 'test=a&p=b'
     })
     .carousel({
         thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
