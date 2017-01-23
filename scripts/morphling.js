@@ -81,10 +81,10 @@ module.exports = function(robot){
     res.reply(text1, text2, text3);
   });
 
-  robot.hear(/buttons/i, function(res){
+  robot.hear(/b/i, function(res){
     var msg = BuildTemplateMessage
       .init('this is a template msg')
-      msg.buttons({
+      .buttons({
         thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
         title: 'Template Message',
         text: 'Let me google for you'
@@ -96,8 +96,28 @@ module.exports = function(robot){
       .action('uri', {
         label: 'Adapter Link',
         uri: 'https://www.google.com.tw/'
-      });
-      msg.build();
+      })
+      .build();
+    res.reply(msg);
+  });
+
+  robot.hear(/s/i, function(res){
+    var msg = BuildTemplateMessage
+      .init('Subscribe')
+      .confirm({
+        text: '訂閱海賊王?'
+      })
+      .action('postback', {
+        label: '訂閱',
+        //data: 'subscribe=true&comic=02'
+        text: '訂閱成功'
+        //uri: 'https://www.google.com.tw/search?q=ok'
+      })
+      .action('message', {
+        label: '取消',
+        text: '太可惜了'
+      })
+      .build();
     res.reply(msg);
   });
 
@@ -174,23 +194,5 @@ module.exports = function(robot){
   //   return msgObj;
   // }
 
-  robot.hear(/subscribe/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('Subscribe')
-      .confirm({
-        text: '訂閱海賊王?'
-      })
-      .action('postback', {
-        label: '訂閱',
-        //data: 'subscribe=true&comic=02'
-        text: '訂閱成功'
-        //uri: 'https://www.google.com.tw/search?q=ok'
-      })
-      .action('message', {
-        label: '取消',
-        text: '太可惜了'
-      })
-      .build();
-    res.reply(msg);
-  });
+  
 };
