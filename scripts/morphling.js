@@ -154,6 +154,10 @@ module.exports = function(robot){
         label: 'Adapter Link',
         uri: 'https://github.com/puresmash/hubot-line-messaging'
     })
+    .action('postback', {
+        label: 'subscribe',
+        data: 'test=b&p=c'
+    })
     .build();
     res.reply(msg);
     //var comicList = comic.readAll().then(function(result){
