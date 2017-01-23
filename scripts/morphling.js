@@ -1,7 +1,7 @@
 "use strict";
 var LineMessaging = require('hubot-line-messaging-api');
 var StickerMessage = require('hubot-line-messaging-api').StickerMessage;
-var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
+//var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
 var SendSticker = LineMessaging.SendSticker;
 var SendLocation = LineMessaging.SendLocation;
 var SendImage = LineMessaging.SendImage;
@@ -103,21 +103,19 @@ module.exports = function(robot){
 
   robot.hear(/s/i, function(res){
     var msg = BuildTemplateMessage
-      .init('Subscribe')
-      .confirm({
-        text: '訂閱海賊王?'
-      })
-      .action('postback', {
-        label: '訂閱',
-        //data: 'subscribe=true&comic=02'
-        text: '訂閱成功'
-        //uri: 'https://www.google.com.tw/search?q=ok'
-      })
-      .action('message', {
-        label: '取消',
-        text: '太可惜了'
-      })
-      .build();
+    .init('this is a confirm msg')
+    .confirm({
+        text: 'confirm?'
+    })
+    .action('uri', {
+        label: 'OK',
+        uri: 'https://www.google.com.tw/search?q=ok'
+    })
+    .action('message', {
+        label: 'Cancel',
+        text: 'cancel request'
+    })
+    .build();
     res.reply(msg);
   });
 
@@ -132,6 +130,28 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
+    var msg = BuildTemplateMessage
+    .init('this is a carousel msg')
+    .carousel({
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
+        title: 'Carousel Message 1',
+        text: 'text1'
+    })
+    .action('uri', {
+        label: 'Open Google',
+        uri: 'https://www.google.com.tw/'
+    })
+    .carousel({
+        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
+        title: 'Carousel Message 2',
+        text: 'text2'
+    })
+    .action('uri', {
+        label: 'Adapter Link',
+        uri: 'https://github.com/puresmash/hubot-line-messaging'
+    })
+    .build();
+    res.reply(msg);
     //var comicList = comic.readAll().then(function(result){
       // var msgObj = BuildTemplateMessage.init('Comic list');
       // var count = 0;
@@ -172,7 +192,7 @@ module.exports = function(robot){
       //   console.log('count: ' + count + ', msgObj: ', msgObj);
       // });
       // msgObj.build();
-      res.reply("yes");
+      // res.reply("yes");
     // });
   });
 
