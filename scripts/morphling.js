@@ -18,6 +18,9 @@ module.exports = function(robot){
   var filterStickers = function(message){
     var result = false;
     var stickerMsg = message.message;
+    if (message.message.type === 'postback') {
+      console.log(message.message);
+    }
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
       result = true;
     }
