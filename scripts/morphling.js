@@ -95,7 +95,7 @@ module.exports = function(robot){
       })
       .action('postback', {
         label: 'postback',
-        label: 'test=a'
+        data: 'test=a'
       })
       .build();
     res.reply(msg);
@@ -140,6 +140,10 @@ module.exports = function(robot){
     .action('uri', {
         label: 'Open Google',
         uri: 'https://www.google.com.tw/'
+    })
+    .action('postback', {
+        label: 'subscribe',
+        data: ''
     })
     .carousel({
         thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
