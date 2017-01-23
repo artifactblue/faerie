@@ -102,23 +102,23 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/s/i, function(res){
-    var msg = BuildTemplateMessage
-    .init('this is a confirm msg')
-    .confirm({
-        text: 'confirm?'
-    })
-    .action('uri', {
-        label: 'OK',
-        uri: 'https://www.google.com.tw/search?q=ok'
-    })
-    .action('message', {
-        label: 'Cancel',
-        text: 'cancel request'
-    })
-    .build();
-    res.reply(msg);
-  });
+  // robot.hear(/s/i, function(res){
+  //   var msg = BuildTemplateMessage
+  //   .init('this is a confirm msg')
+  //   .confirm({
+  //       text: 'confirm?'
+  //   })
+  //   .action('uri', {
+  //       label: 'OK',
+  //       uri: 'https://www.google.com.tw/search?q=ok'
+  //   })
+  //   .action('message', {
+  //       label: 'Cancel',
+  //       text: 'cancel request'
+  //   })
+  //   .build();
+  //   res.reply(msg);
+  // });
 
   /**
    * Image URL (Max: 1000 characters)
@@ -238,7 +238,7 @@ module.exports = function(robot){
             "uri": "https://github.com/Ksetra/morphling"
           },
           {
-            "type": "url",
+            "type": "postback",
             "label": "訂閱[" + data.comicname + "]",
             "data": "action=subscrbe&comic=" + data.id
           }
