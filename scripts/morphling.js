@@ -113,10 +113,10 @@ module.exports = function(robot){
    */
   robot.hear(/list/i, function(res){
     var comicList = comic.readAll().then(function(result){
-      var msgObj = BuildTemplateMessage.init('Comic list');
+      // var msgObj = BuildTemplateMessage.init('Comic list');
       // var count = 0;
-      // result.rows.forEach(function(data){
-      //   //console.log('comic data', data);
+      result.rows.forEach(function(data){
+        console.log('comic data', data);
       //   if (count == 0) {
       //     msgObj = BuildTemplateMessage.init('Comic list')
       //     .carousel({
@@ -150,9 +150,9 @@ module.exports = function(robot){
       //   }
       //   count++;
       //   console.log('count: ' + count + ', msgObj: ', msgObj);
-      // });
-      msgObj.build();
-      res.reply(msgObj);
+      });
+      // msgObj.build();
+      res.reply("yes");
     });
   });
 
