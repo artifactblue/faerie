@@ -93,9 +93,9 @@ module.exports = function(robot){
         label: 'Open Google',
         uri: 'https://www.google.com.tw/'
       })
-      .action('uri', {
-        label: 'Adapter Link',
-        uri: 'https://www.google.com.tw/'
+      .action('postback', {
+        label: 'postback',
+        label: 'test=a'
       })
       .build();
     res.reply(msg);
