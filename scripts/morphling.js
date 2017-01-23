@@ -148,7 +148,8 @@ module.exports = function(robot){
             data: 'subscribe'
           });
         }
-        console.log('msgObj: ', msgObj);
+        count++;
+        console.log('count: ' + count + ', msgObj: ', msgObj);
       });
       msgObj.build();
       res.reply(msgObj);
