@@ -230,7 +230,7 @@ module.exports = function(robot){
       var actions = {
         "thumbnailImageUrl": data.thumbnail,
         "title": data.comicname,
-        "text": data.lastvolnumber
+        "text": data.lastvolnumber,
         "actions": [
           {
             "type": "url",
