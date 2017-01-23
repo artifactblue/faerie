@@ -206,64 +206,47 @@ module.exports = function(robot){
   });
 
   robot.hear(/test/i, function(res){
-    res.reply(buildCarousel());
+    var comicList = comic.readAll().then(function(result){
+      res.reply(buildCarousel("comic list", buildCarouselColumns(result)));
+    });
   });
 
-  function buildCarousel() {
+  function buildCarousel(altText, columns) {
     var obj = {
       "type": "template",
-      "altText": "this is a carousel template",
+      "altText": altText,
       "template": {
           "type": "carousel",
-          "columns": [
-              {
-                "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
-                "title": "this is menu",
-                "text": "description",
-                "actions": [
-                    {
-                        "type": "postback",
-                        "label": "Buy",
-                        "data": "action=buy&itemid=111"
-                    },
-                    {
-                        "type": "postback",
-                        "label": "Add to cart",
-                        "data": "action=add&itemid=111"
-                    },
-                    {
-                        "type": "uri",
-                        "label": "View detail",
-                        "uri": "http://example.com/page/111"
-                    }
-                ]
-              },
-              {
-                "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
-                "title": "this is menu",
-                "text": "description",
-                "actions": [
-                    {
-                        "type": "postback",
-                        "label": "Buy",
-                        "data": "action=buy&itemid=222"
-                    },
-                    {
-                        "type": "postback",
-                        "label": "Add to cart",
-                        "data": "action=add&itemid=222"
-                    },
-                    {
-                        "type": "uri",
-                        "label": "View detail",
-                        "uri": "http://example.com/page/222"
-                    }
-                ]
-              }
-          ]
+          "columns": columns
       }
     }
+    console.log('obj', obj);
     return obj;
+  }
+
+  function buildCarouselColumns(result) {
+    var columns = [];
+    result.rows.forEach(function(data){
+      var actions = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.comicname,
+        "text": data.lastvolnumber
+        "actions": [
+          {
+            "type": "url",
+            "label": "線上觀看",
+            "uri": "https://github.com/Ksetra/morphling"
+          },
+          {
+            "type": "url",
+            "label": "訂閱[" + data.comicname + "]",
+            "data": "action=subscrbe&comic=" + data.id
+          }
+        ]
+      };
+      columns.push(actions);
+    });
+    return columns;
   }
 
   // function msgCarousel(msgObj, data){
