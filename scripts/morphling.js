@@ -179,7 +179,7 @@ module.exports = function(robot){
     console.log('send notification ', postData);
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
-      .header('Accept', 'application/json')
+      .header('Content-Type', 'application/json')
       .post(postData)(function(err, resp, body) {
         console.log(err, resp, body);
       });
