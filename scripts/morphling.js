@@ -282,8 +282,8 @@ module.exports = function(robot){
           },
           {
             "type": "postback",
-            "label": "訂閱[" + data.comicname + "]",
-            "data": "action=subscribe&comic=" + data.id
+            "label": "訂閱",
+            "data": "action=subscribe&comic=0"
           }
         ]
       };
