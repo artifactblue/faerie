@@ -1,14 +1,14 @@
 "use strict";
 var LineMessaging = require('hubot-line-messaging-api');
 var StickerMessage = require('hubot-line-messaging-api').StickerMessage;
-//var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
+var PostbackMessage = require('hubot-line-messaging-api').PostbackMessage;
 var SendSticker = LineMessaging.SendSticker;
 var SendLocation = LineMessaging.SendLocation;
 var SendImage = LineMessaging.SendImage;
 var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
-//var comic = require('../db/models/comic.js');
+var comic = require('../db/models/comic.js');
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
 
@@ -18,9 +18,6 @@ module.exports = function(robot){
   var filterStickers = function(message){
     var result = false;
     var stickerMsg = message.message;
-    if (message.message.type === 'postback') {
-      console.log(message.message);
-    }
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
       result = true;
     }
@@ -31,25 +28,26 @@ module.exports = function(robot){
     return result;
   };
 
-  // var filterPostback = function(message){
-  //   var result = false;
-  //   var postbackMsg = message.message;
-  //   if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
-  //     result = true;
+  var filterPostback = function(message){
+    var result = false;
+    var postbackMsg = message.message;
+    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+      console.log(message.message);
+      result = true;
+      // TODO save to database
+    }
+    //console.log('filterPostback', result);
+    return result;
+  }
 
-  //     // TODO save to database
-  //   }
-  //   console.log('filterPostback', result);
-  //   return result;
-  // }
-
-  // robot.listen(filterPostback, function(res){
-  //   console.log('reply postback');
-  //   // push API
-
-  //   var text = new SendText('已訂閱完成，謝謝');
-  //   res.reply(text);
-  // });
+  robot.listen(filterPostback, function(res){
+    //console.log('reply postback');
+    // push API
+    //console.log(res);
+    //var text = new SendText('已訂閱完成，謝謝');
+    //res.reply(text);
+    console.log(res.message.message.postback);
+  });
 
   robot.listen(filterStickers, function(res){
     var stickerMessage = res.message.message;
@@ -104,23 +102,23 @@ module.exports = function(robot){
     res.reply(msg);
   });
 
-  robot.hear(/s/i, function(res){
-    var msg = BuildTemplateMessage
-    .init('this is a confirm msg')
-    .confirm({
-        text: 'confirm?'
-    })
-    .action('uri', {
-        label: 'OK',
-        uri: 'https://www.google.com.tw/search?q=ok'
-    })
-    .action('message', {
-        label: 'Cancel',
-        text: 'cancel request'
-    })
-    .build();
-    res.reply(msg);
-  });
+  // robot.hear(/s/i, function(res){
+  //   var msg = BuildTemplateMessage
+  //   .init('this is a confirm msg')
+  //   .confirm({
+  //       text: 'confirm?'
+  //   })
+  //   .action('uri', {
+  //       label: 'OK',
+  //       uri: 'https://www.google.com.tw/search?q=ok'
+  //   })
+  //   .action('message', {
+  //       label: 'Cancel',
+  //       text: 'cancel request'
+  //   })
+  //   .build();
+  //   res.reply(msg);
+  // });
 
   /**
    * Image URL (Max: 1000 characters)
@@ -206,6 +204,128 @@ module.exports = function(robot){
       // res.reply("yes");
     // });
   });
+
+  robot.hear(/test/i, function(res){
+    var comicList = comic.readAll().then(function(result){
+      var msg = buildCarousel("comic list", result);
+      console.log('msg 1 ', msg);
+      var msg2 = {
+  "type": "template",
+  "altText": "this is a carousel template",
+  "template": {
+      "type": "carousel",
+      "columns": [
+          {
+            "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
+            "title": "this is menu",
+            "text": "description",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "Buy",
+                    "data": "action=buy&itemid=111"
+                },
+                {
+                    "type": "postback",
+                    "label": "Add to cart",
+                    "data": "action=add&itemid=111"
+                },
+                {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/111"
+                }
+            ]
+          },
+          {
+            "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+            "title": "this is menu",
+            "text": "description",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "Buy",
+                    "data": "action=buy&itemid=222"
+                },
+                {
+                    "type": "postback",
+                    "label": "Add to cart",
+                    "data": "action=add&itemid=222"
+                },
+                {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/222"
+                }
+            ]
+          }
+      ]
+  }
+}
+      console.log('msg 2 ', msg2);
+      res.reply(msg);
+    });
+  });
+
+  function buildCarousel(altText, result) {
+    var columns = [];
+    result.rows.forEach(function(data){
+      var carousel = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.comicname,
+        "text": data.lastvolnumber,
+        "actions": [
+          {
+            "type": "url",
+            "label": "線上觀看",
+            "uri": "https://github.com/Ksetra/morphling"
+          },
+          {
+            "type": "postback",
+            "label": "訂閱",
+            "data": "action=subscribe&comic=0"
+          }
+        ]
+      };
+      columns.push(carousel);
+    });
+    //console.log(columns);
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "carousel",
+          "columns": columns
+      }
+    }
+    //console.log('obj', obj);
+    return obj;
+  }
+
+  // function buildCarouselColumns(result) {
+  //   var columns = [];
+  //   result.rows.forEach(function(data){
+  //     var carousel = {
+  //       "thumbnailImageUrl": data.thumbnail,
+  //       "title": data.comicname,
+  //       "text": data.lastvolnumber,
+  //       "actions": [
+  //         {
+  //           "type": "url",
+  //           "label": "線上觀看",
+  //           "uri": "https://github.com/Ksetra/morphling"
+  //         },
+  //         {
+  //           "type": "postback",
+  //           "label": "訂閱[" + data.comicname + "]",
+  //           "data": "action=subscrbe&comic=" + data.id
+  //         }
+  //       ]
+  //     };
+  //     columns.push(carousel);
+  //   });
+  //   return columns;
+  // }
 
   // function msgCarousel(msgObj, data){
   //   msgObj.carousel({
