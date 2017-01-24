@@ -82,7 +82,7 @@ module.exports = function(robot){
     res.reply(text1, text2, text3);
   });
 
-  robot.hear(/b/i, function(res){
+  robot.hear(/buttons/i, function(res){
     var msg = BuildTemplateMessage
       .init('this is a template msg')
       .buttons({
@@ -131,138 +131,8 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
-    var msg = BuildTemplateMessage
-    .init('this is a carousel msg')
-    .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
-        title: 'Carousel Message 1',
-        text: 'text1'
-    })
-    .action('uri', {
-        label: 'Open Google',
-        uri: 'https://www.google.com.tw/'
-    })
-    .action('postback', {
-        label: 'subscribe',
-        data: 'test=a&p=b'
-    })
-    .carousel({
-        thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/carousel.jpg?raw=true',
-        title: 'Carousel Message 2',
-        text: 'text2'
-    })
-    .action('uri', {
-        label: 'Adapter Link',
-        uri: 'https://github.com/puresmash/hubot-line-messaging'
-    })
-    .action('postback', {
-        label: 'subscribe',
-        data: 'test=b&p=c'
-    })
-    .build();
-    res.reply(msg);
-    //var comicList = comic.readAll().then(function(result){
-      // var msgObj = BuildTemplateMessage.init('Comic list');
-      // var count = 0;
-      // result.rows.forEach(function(data){
-        // console.log('comic data', data);
-      //   if (count == 0) {
-      //     msgObj = BuildTemplateMessage.init('Comic list')
-      //     .carousel({
-      //       thumbnailImageUrl: data.thumbnail,
-      //       title: data.comicname,
-      //       text: data.lastvolnumber
-      //     })
-      //     .action('postback', {
-      //       label: '線上觀看',
-      //       data: 'viewOnline'
-      //     })
-      //     .action('postback', {
-      //       label: '訂閱[' + data.comicname + ']',
-      //       data: 'subscribe'
-      //     });
-      //   } else {
-      //     msgObj
-      //     .carousel({
-      //       thumbnailImageUrl: data.thumbnail,
-      //       title: data.comicname,
-      //       text: data.lastvolnumber
-      //     })
-      //     .action('postback', {
-      //       label: '線上觀看',
-      //       data: 'viewOnline'
-      //     })
-      //     .action('postback', {
-      //       label: '訂閱[' + data.comicname + ']',
-      //       data: 'subscribe'
-      //     });
-      //   }
-      //   count++;
-      //   console.log('count: ' + count + ', msgObj: ', msgObj);
-      // });
-      // msgObj.build();
-      // res.reply("yes");
-    // });
-  });
-
-  robot.hear(/test/i, function(res){
     var comicList = comic.readAll().then(function(result){
       var msg = buildCarousel("comic list", result);
-      console.log('msg 1 ', msg);
-      var msg2 = {
-  "type": "template",
-  "altText": "this is a carousel template",
-  "template": {
-      "type": "carousel",
-      "columns": [
-          {
-            "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
-            "title": "this is menu",
-            "text": "description",
-            "actions": [
-                {
-                    "type": "postback",
-                    "label": "Buy",
-                    "data": "action=buy&itemid=111"
-                },
-                {
-                    "type": "postback",
-                    "label": "Add to cart",
-                    "data": "action=add&itemid=111"
-                },
-                {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/111"
-                }
-            ]
-          },
-          {
-            "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
-            "title": "this is menu",
-            "text": "description",
-            "actions": [
-                {
-                    "type": "postback",
-                    "label": "Buy",
-                    "data": "action=buy&itemid=222"
-                },
-                {
-                    "type": "postback",
-                    "label": "Add to cart",
-                    "data": "action=add&itemid=222"
-                },
-                {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/222"
-                }
-            ]
-          }
-      ]
-  }
-}
-      console.log('msg 2 ', msg2);
       res.reply(msg);
     });
   });
@@ -270,11 +140,10 @@ module.exports = function(robot){
   function buildCarousel(altText, result) {
     var columns = [];
     result.rows.forEach(function(data){
-      console.log(data.thumbnail + ', ' + data.comicname + ', ' + data.lastvolnumber);
       var carousel = {
-        "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
-        "title": "this is menu",
-        "text": "description",
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.comicname,
+        "text": data.lastvolnumber,
         "actions": [
           {
             "type": "uri",
@@ -283,14 +152,13 @@ module.exports = function(robot){
           },
           {
             "type": "postback",
-            "label": "訂閱",
-            "data": "action=subscribe&comic=0"
+            "label": "訂閱[" + data.comicname + "]",
+            "data": "action=subscribe&comic=" + data.id
           }
         ]
       };
       columns.push(carousel);
     });
-    //console.log(columns);
     var obj = {
       "type": "template",
       "altText": altText,
@@ -299,52 +167,6 @@ module.exports = function(robot){
           "columns": columns
       }
     }
-    //console.log('obj', obj);
     return obj;
   }
-
-  // function buildCarouselColumns(result) {
-  //   var columns = [];
-  //   result.rows.forEach(function(data){
-  //     var carousel = {
-  //       "thumbnailImageUrl": data.thumbnail,
-  //       "title": data.comicname,
-  //       "text": data.lastvolnumber,
-  //       "actions": [
-  //         {
-  //           "type": "url",
-  //           "label": "線上觀看",
-  //           "uri": "https://github.com/Ksetra/morphling"
-  //         },
-  //         {
-  //           "type": "postback",
-  //           "label": "訂閱[" + data.comicname + "]",
-  //           "data": "action=subscrbe&comic=" + data.id
-  //         }
-  //       ]
-  //     };
-  //     columns.push(carousel);
-  //   });
-  //   return columns;
-  // }
-
-  // function msgCarousel(msgObj, data){
-  //   msgObj.carousel({
-  //     thumbnailImageUrl: data.thumbnail,
-  //     title: data.comicname,
-  //     text: data.lastvolnumber
-  //   })
-  //   .action('postback', {
-  //     label: '線上觀看',
-  //     data: 'viewOnline'
-  //   })
-  //   .action('postback', {
-  //     label: '訂閱[' + data.comicname + ']',
-  //     data: 'subscribe'
-  //   });
-  //   console.log('msgObj: ', msgObj);
-  //   return msgObj;
-  // }
-
-  
 };
