@@ -207,7 +207,63 @@ module.exports = function(robot){
 
   robot.hear(/test/i, function(res){
     var comicList = comic.readAll().then(function(result){
-      res.reply(buildCarousel("comic list", result));
+      var msg = buildCarousel("comic list", result);
+      console.log('msg 1 ', msg);
+      msg = {
+  "type": "template",
+  "altText": "this is a carousel template",
+  "template": {
+      "type": "carousel",
+      "columns": [
+          {
+            "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
+            "title": "this is menu",
+            "text": "description",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "Buy",
+                    "data": "action=buy&itemid=111"
+                },
+                {
+                    "type": "postback",
+                    "label": "Add to cart",
+                    "data": "action=add&itemid=111"
+                },
+                {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/111"
+                }
+            ]
+          },
+          {
+            "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+            "title": "this is menu",
+            "text": "description",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "Buy",
+                    "data": "action=buy&itemid=222"
+                },
+                {
+                    "type": "postback",
+                    "label": "Add to cart",
+                    "data": "action=add&itemid=222"
+                },
+                {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/222"
+                }
+            ]
+          }
+      ]
+  }
+}
+      console.log('msg 2 ', msg);
+      res.reply(msg);
     });
   });
 
@@ -233,7 +289,7 @@ module.exports = function(robot){
       };
       columns.push(carousel);
     });
-    console.log(columns);
+    //console.log(columns);
     var obj = {
       "type": "template",
       "altText": altText,
@@ -242,7 +298,7 @@ module.exports = function(robot){
           "columns": columns
       }
     }
-    console.log('obj', obj);
+    //console.log('obj', obj);
     return obj;
   }
 
