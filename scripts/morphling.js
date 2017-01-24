@@ -44,7 +44,7 @@ module.exports = function(robot){
           console.log('BODY ', body);
           var respBody = JSON.parse(body);
           //res.reply('你好，' + respBody.displayName + "，使用者ID " + res.message.user.id);
-          var entity = {userKey: respBody.userId, displayName: respBody.displayName}
+          var entity = {id: respBody.userId, displayName: respBody.displayName}
           users.create(entity).then(function(result){
             console.log(respBody.userId + ' updated');
           });
@@ -57,27 +57,19 @@ module.exports = function(robot){
   robot.listen(filterPostback, function(res){
     console.log(res);
     var postbackMsg = res.message.message.postback;
-
     console.log(res.message.user.id + ", " + postbackMsg.data);
     var postbackData = postbackMsg.data.split('&');
-    
-
-    users.readByUserKey(res.message.user.id).then(function(result){
-      var entity = {userId: result.rows[0].id};
-      postbackData.forEach(function(param){
-        var data = param.split('=');
-        entity[data[0]] = data[1];
-      });
-      userSubscription.create(entity).then(function(result){
-        pushMessage(res.message.message);
-      }).catch(function(err){
-        console.log('#1', err);
-      });
+    var entity = {userId: res.message.user.id};
+    postbackData.forEach(function(param){
+      var data = param.split('=');
+      entity[data[0]] = data[1];
+    });
+    userSubscription.create(entity).then(function(result){
+      pushMessage(res.message.message);
     }).catch(function(err){
       console.log('#1', err);
     });
-
-    
+  
   });
 
   robot.listen(filterStickers, function(res){
