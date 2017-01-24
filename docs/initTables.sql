@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS Users (
-	id serial primary key,
+	id text primary key,
 	displayName text,
-	userKey text,
 	createTimestamp timestamp with time zone
 );
 

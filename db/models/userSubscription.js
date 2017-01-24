@@ -7,9 +7,10 @@ UserSubscription.prototype.readByUserId = function(id) {
 };
 
 UserSubscription.prototype.create = function(entity) {
-	return pool.query('REPLACE INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())' +
-		'ON CONFLICT (UserId, ComicId) DO UPDATE SET CreateTimestamp = now() WHERE UserId = $4 and ComicId = $5', 
-		[entity.userId, entity.comicId, entity.status, entity.userId, entity.comicId]);
+	return pool.query('INSERT INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())'
+		// + 'ON CONFLICT (UserId, ComicId) DO NOTHING'
+		, 
+		[entity.userId, entity.comicId, entity.status]);
 }
 
 UserSubscription.prototype.update = function(entity) {
@@ -17,3 +18,9 @@ UserSubscription.prototype.update = function(entity) {
 }
 
 exports = module.exports = new UserSubscription();
+
+/*
+
+INSERT INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ('U33823165fc452e43a0a66ad60fba52bf', 2, 'A', now()) 
+;
+		*/
