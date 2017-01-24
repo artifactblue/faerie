@@ -55,25 +55,21 @@ module.exports = function(robot){
   }
 
   robot.listen(filterPostback, function(res){
-    //console.log('reply postback');
-    // push API
-    //console.log(res);
-    //var text = new SendText('已訂閱完成，謝謝');
-    //res.reply(text);
+    console.log(res);
     var postbackMsg = res.message.message.postback;
 
-    console.log(postbackMsg.user.id + ", " + postbackMsg.postback.data);
-    var postbackData = postbackMsg.postback.data.split('&');
+    console.log(res.message.user.id + ", " + postbackMsg.data);
+    var postbackData = postbackMsg.data.split('&');
     
 
-    users.readByUserKey(postbackMsg.user.id).then(function(result){
+    users.readByUserKey(es.message.user.id).then(function(result){
       var entity = {userId: result.rows[0].id};
       postbackData.forEach(function(param){
         var data = param.split('=');
         entity[data[0]] = data[1];
       });
       userSubscription.create(entity).then(function(result){
-        pushMessage(postbackMsg);
+        pushMessage(res.message.message);
       }).catch(function(err){
         console.log('#1', err);
       });
@@ -172,10 +168,10 @@ module.exports = function(robot){
     });
   });
 
-  function pushMessage(postbackMsg) {
-    console.log('push', postbackMsg);
+  function pushMessage(message) {
+    console.log('push', message);
     var postData = JSON.stringify({
-      "to": postbackMsg.user.id,
+      "to": message.user.id,
       "messages":[
         {
           "type": "text",
@@ -183,7 +179,7 @@ module.exports = function(robot){
         },
         {
           "type": "text",
-          "text": postbackMsg.postback.data
+          "text": message.postback.data
         }
       ]
     });
