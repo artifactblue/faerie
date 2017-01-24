@@ -209,7 +209,7 @@ module.exports = function(robot){
     var comicList = comic.readAll().then(function(result){
       var msg = buildCarousel("comic list", result);
       console.log('msg 1 ', msg);
-      msg = {
+      var msg2 = {
   "type": "template",
   "altText": "this is a carousel template",
   "template": {
@@ -262,7 +262,7 @@ module.exports = function(robot){
       ]
   }
 }
-      console.log('msg 2 ', msg);
+      console.log('msg 2 ', msg2);
       res.reply(msg);
     });
   });
