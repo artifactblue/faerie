@@ -179,7 +179,10 @@ module.exports = function(robot){
     console.log('send notification ', postData);
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
-      .post(postData)(function(err, resp, body) {});
+      .header('Accept', 'application/json')
+      .post(postData)(function(err, resp, body) {
+        console.log(err, resp, body);
+      });
   }
 
   function buildCarousel(altText, result) {
