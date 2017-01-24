@@ -7,7 +7,8 @@ UserSubscription.prototype.readByUserId = function(id) {
 };
 
 UserSubscription.prototype.create = function(entity) {
-
+	return pool.query('REPLACE INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())', 
+		[entity.userId, entity.comicId, entity.status]);
 }
 
 UserSubscription.prototype.update = function(entity) {
