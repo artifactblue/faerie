@@ -270,10 +270,11 @@ module.exports = function(robot){
   function buildCarousel(altText, result) {
     var columns = [];
     result.rows.forEach(function(data){
+      console.log(data.thumbnail + ', ' + data.comicname + ', ' + data.lastvolnumber);
       var carousel = {
-        "thumbnailImageUrl": data.thumbnail,
-        "title": data.comicname,
-        "text": data.lastvolnumber,
+        "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+        "title": "this is menu",
+        "text": "description",
         "actions": [
           {
             "type": "url",
