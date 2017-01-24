@@ -37,7 +37,7 @@ module.exports = function(robot){
       console.log(message.message);
       result = true;
       // TODO save to database
-      robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
+      robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
         .header('Authorization', "Bearer " + LINE_TOKEN)
         .get()(function(err, resp, body) {
           //console.log('RESP ', resp);
@@ -179,7 +179,7 @@ module.exports = function(robot){
       "messages":[
         {
           "type": "text",
-          "text": "已完成訂閱"
+          "text": "訂閱成功"
         },
         {
           "type": "text",
