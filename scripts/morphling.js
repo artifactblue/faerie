@@ -65,7 +65,7 @@ module.exports = function(robot){
       entity[data[0]] = data[1];
     });
     userSubscription.create(entity).then(function(result){
-      pushMessage(res.message.message);
+      pushMessage(res.message.user.id, "訂閱完成");
     }).catch(function(err){
       console.log('#1', err);
     });
@@ -160,21 +160,23 @@ module.exports = function(robot){
     });
   });
 
-  function pushMessage(message) {
+  robot.hear(/push/i, function(res){
+    pushMessage('U33823165fc452e43a0a66ad60fba52bf', "通知");
+    res.reply(new SendText('通知服務'));
+  });
+
+  function pushMessage(user, message) {
     console.log('push', message);
     var postData = JSON.stringify({
-      "to": message.user.id,
+      "to": user,
       "messages":[
         {
           "type": "text",
-          "text": "訂閱成功"
-        },
-        {
-          "type": "text",
-          "text": message.postback.data
+          "text": message
         }
       ]
     });
+    console.log('send notification ', postData);
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .post(postData)(function(err, resp, body) {});
