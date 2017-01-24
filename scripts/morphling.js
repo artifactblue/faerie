@@ -62,7 +62,7 @@ module.exports = function(robot){
     var postbackData = postbackMsg.data.split('&');
     
 
-    users.readByUserKey(es.message.user.id).then(function(result){
+    users.readByUserKey(res.message.user.id).then(function(result){
       var entity = {userId: result.rows[0].id};
       postbackData.forEach(function(param){
         var data = param.split('=');

@@ -7,8 +7,9 @@ UserSubscription.prototype.readByUserId = function(id) {
 };
 
 UserSubscription.prototype.create = function(entity) {
-	return pool.query('REPLACE INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())', 
-		[entity.userId, entity.comicId, entity.status]);
+	return pool.query('REPLACE INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())' +
+		'ON CONFLICT (UserId, ComicId) DO UPDATE SET CreateTimestamp = now() WHERE UserId = $4 and ComicId = $5', 
+		[entity.userId, entity.comicId, entity.status, entity.userId, entity.comicId]);
 }
 
 UserSubscription.prototype.update = function(entity) {

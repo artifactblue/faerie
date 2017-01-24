@@ -11,8 +11,9 @@ Users.prototype.readByUserKey = function(userKey) {
 }
 
 Users.prototype.create = function(entity) {
-	return pool.query('REPLACE INTO users (DisplayName, UserKey, CreateTimestamp) VALUES ($1, $2, now())', 
-		[entity.displayName, entity.userKey]);
+	return pool.query('INSERT INTO users (DisplayName, UserKey, CreateTimestamp) VALUES ($1, $2, now()) ' + 
+		'ON CONFLICT (UserKey) DO UPDATE SET CreateTimestamp = now() WHERE UserKey = $3', 
+		[entity.displayName, entity.userKey, entity.userKey]);
 }
 
 Users.prototype.update = function(entity) {
