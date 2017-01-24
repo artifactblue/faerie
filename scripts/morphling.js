@@ -277,7 +277,7 @@ module.exports = function(robot){
         "text": "description",
         "actions": [
           {
-            "type": "url",
+            "type": "uri",
             "label": "線上觀看",
             "uri": "https://github.com/Ksetra/morphling"
           },
