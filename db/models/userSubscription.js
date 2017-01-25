@@ -2,8 +2,12 @@ var pool = require('../dbConnectionPool.js');
 
 function UserSubscription() {}
 
-UserSubscription.prototype.readByUserId = function(id) {
-    return pool.query('SELECT * FROM userSubscription WHERE userId = $1', [id]);
+UserSubscription.prototype.SUBSCRIBE = 'SUBSCRIBE';
+UserSubscription.prototype.PENDING = 'PENDING';
+UserSubscription.prototype.UNSUBSCRIBE = 'UNSUBSCRIBE';
+
+UserSubscription.prototype.readByUserId = function(id, limit = 3) {
+    return pool.query('SELECT * FROM userSubscription LEFT JOIN comic ON userSubscription.comicId = comic.id WHERE userId = $1 LIMIT $2', [id, limit]);
 };
 
 UserSubscription.prototype.create = function(entity) {
@@ -14,13 +18,8 @@ UserSubscription.prototype.create = function(entity) {
 }
 
 UserSubscription.prototype.update = function(entity) {
-	
+	return pool.query('UPDATE userSubscription SET status = $1, CreateTimestamp = now() WHERE userId = $2 and comicId = $3',
+		[entity.status, entity.userId, entity.comicId]);
 }
 
 exports = module.exports = new UserSubscription();
-
-/*
-
-INSERT INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ('U33823165fc452e43a0a66ad60fba52bf', 2, 'A', now()) 
-;
-		*/
