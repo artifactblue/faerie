@@ -7,7 +7,9 @@ Users.prototype.read = function(id) {
 };
 
 Users.prototype.create = function(entity) {
-
+	return pool.query('INSERT INTO users (DisplayName, id, CreateTimestamp) VALUES ($1, $2, now()) ' + 
+		'ON CONFLICT (id) DO NOTHING', 
+		[entity.displayName, entity.userKey]);
 }
 
 Users.prototype.update = function(entity) {

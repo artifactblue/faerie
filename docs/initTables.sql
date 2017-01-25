@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS Users (
-	id serial primary key,
+	id text primary key,
 	displayName text,
-	userKey text,
 	createTimestamp timestamp with time zone
 );
 
@@ -15,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Comic (
 
 CREATE TABLE IF NOT EXISTS UserSubscription (
 	id serial primary key,
-	userId integer,
+	userId text,
 	comicId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
 	createTimestamp timestamp with time zone
