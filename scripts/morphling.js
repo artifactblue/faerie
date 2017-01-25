@@ -8,6 +8,9 @@ var SendImage = LineMessaging.SendImage;
 var SendVideo = LineMessaging.SendVideo;
 var SendAudio = LineMessaging.SendAudio;
 var SendText = LineMessaging.SendText;
+var comic = require('../db/models/comic.js');
+var users = require('../db/models/users.js');
+var userSubscription = require('../db/models/userSubscription.js');
 
 // 3rd party libs
 var imgur = require('imgur');
@@ -62,20 +65,42 @@ module.exports = function(robot){
     var result = false;
     var postbackMsg = message.message;
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+      console.log(message.message);
       result = true;
-      
       // TODO save to database
+      robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
+        .header('Authorization', "Bearer " + LINE_TOKEN)
+        .get()(function(err, resp, body) {
+          //console.log('RESP ', resp);
+          console.log('BODY ', body);
+          var respBody = JSON.parse(body);
+          //res.reply('你好，' + respBody.displayName + "，使用者ID " + res.message.user.id);
+          var entity = {id: respBody.userId, displayName: respBody.displayName}
+          users.create(entity).then(function(result){
+            console.log(respBody.userId + ' updated');
+          });
+        });
     }
-    console.log('filterPostback', result);
+    //console.log('filterPostback', result);
     return result;
   }
 
   robot.listen(filterPostback, function(res){
-    console.log('reply postback');
-    // push API
-
-    var text = new SendText('已訂閱完成，謝謝');
-    res.reply(text);
+    console.log(res);
+    var postbackMsg = res.message.message.postback;
+    console.log(res.message.user.id + ", " + postbackMsg.data);
+    var postbackData = postbackMsg.data.split('&');
+    var entity = {userId: res.message.user.id};
+    postbackData.forEach(function(param){
+      var data = param.split('=');
+      entity[data[0]] = data[1];
+    });
+    userSubscription.create(entity).then(function(result){
+      pushMessage(res.message.user.id, "訂閱完成");
+    }).catch(function(err){
+      console.log('#1', err);
+    });
+  
   });
 
   robot.listen(filterStickers, function(res){
@@ -123,13 +148,31 @@ module.exports = function(robot){
         label: 'Open Google',
         uri: 'https://www.google.com.tw/'
       })
-      .action('uri', {
-        label: 'Adapter Link',
-        uri: 'https://www.google.com.tw/'
+      .action('postback', {
+        label: 'postback',
+        data: 'test=a'
       })
       .build();
     res.reply(msg);
   });
+
+  // robot.hear(/s/i, function(res){
+  //   var msg = BuildTemplateMessage
+  //   .init('this is a confirm msg')
+  //   .confirm({
+  //       text: 'confirm?'
+  //   })
+  //   .action('uri', {
+  //       label: 'OK',
+  //       uri: 'https://www.google.com.tw/search?q=ok'
+  //   })
+  //   .action('message', {
+  //       label: 'Cancel',
+  //       text: 'cancel request'
+  //   })
+  //   .build();
+  //   res.reply(msg);
+  // });
 
   /**
    * Image URL (Max: 1000 characters)
@@ -142,49 +185,10 @@ module.exports = function(robot){
    * 訂閱後收到 postback 這邊可以提供付費功能
    */
   robot.hear(/list/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('Comic list')
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/2.jpg',
-        title: '海賊王',
-        text: '海賊王852話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E6%B5%B7%E8%B3%8A%E7%8E%8B%E6%BC%AB%E7%95%AB&vol=2&comicLink=852'
-      })
-      .action('postback', {
-        label: '訂閱[海賊王]',
-        data: 'subscribe=true&comic=2'
-      })
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/10.jpg',
-        title: '獵人',
-        text: '獵人360話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%8D%B5%E4%BA%BA%E6%BC%AB%E7%95%AB&vol=10&comicLink=360'
-      })
-      .action('postback', {
-        label: '訂閱[獵人]',
-        data: 'subscribe=true&comic=10'
-      })
-      .carousel({
-        thumbnailImageUrl: 'https://static.fzdm.com/manhua/img/1.jpg',
-        title: '火影忍者',
-        text: '火影忍者博人傳08話'
-      })
-      .action('uri', {
-        label: '線上觀看',
-        uri: 'http://140.110.203.1/test_comicr/api/pageGet.php?title=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85%E6%BC%AB%E7%95%AB&vol=1&comicLink=brz08'
-      })
-      .action('postback', {
-        label: '訂閱[火影忍者]',
-        data: 'subscribe=true&comic=1'
-      })
-      .build();
-    res.reply(msg);
+    var comicList = comic.readAll().then(function(result){
+      var msg = buildCarousel("comic list", result);
+      res.reply(msg);
+    });
   });
 
   robot.hear(/show (.*) (.*)/i, function(res){
@@ -240,4 +244,62 @@ module.exports = function(robot){
       .build();
     res.reply(msg);
   });
+
+  robot.hear(/push/i, function(res){
+    pushMessage('U33823165fc452e43a0a66ad60fba52bf', "通知");
+    res.reply(new SendText('通知服務'));
+  });
+
+  function pushMessage(user, message) {
+    console.log('push', message);
+    var postData = JSON.stringify({
+      "to": user,
+      "messages":[
+        {
+          "type": "text",
+          "text": message
+        }
+      ]
+    });
+    console.log('send notification ', postData);
+    robot.http("https://api.line.me/v2/bot/message/push")
+      .header('Authorization', "Bearer " + LINE_TOKEN)
+      .header('Content-Type', 'application/json')
+      .post(postData)(function(err, resp, body) {
+        console.log(err, resp, body);
+      });
+  }
+
+  function buildCarousel(altText, result) {
+    var columns = [];
+    result.rows.forEach(function(data){
+      var carousel = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.comicname,
+        "text": data.lastvolnumber,
+        "actions": [
+          {
+            "type": "uri",
+            "label": "線上觀看",
+            "uri": "https://github.com/Ksetra/morphling"
+          },
+          {
+            "type": "postback",
+            "label": "訂閱[" + data.comicname + "]",
+            "data": "status=SUBSCRIBE&comicId=" + data.id
+          }
+        ]
+      };
+      columns.push(carousel);
+    });
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "carousel",
+          "columns": columns
+      }
+    }
+    return obj;
+  }
 };
