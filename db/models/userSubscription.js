@@ -6,8 +6,8 @@ UserSubscription.prototype.SUBSCRIBE = 'SUBSCRIBE';
 UserSubscription.prototype.PENDING = 'PENDING';
 UserSubscription.prototype.UNSUBSCRIBE = 'UNSUBSCRIBE';
 
-UserSubscription.prototype.readByUserId = function(id) {
-    return pool.query('SELECT * FROM userSubscription WHERE userId = $1', [id]);
+UserSubscription.prototype.readByUserId = function(id, limit = 3) {
+    return pool.query('SELECT * FROM userSubscription WHERE userId = $1 LIMIT $2', [id, limit]);
 };
 
 UserSubscription.prototype.create = function(entity) {

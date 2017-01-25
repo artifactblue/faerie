@@ -221,6 +221,7 @@ module.exports = function(robot){
           "actions": actions
       }
     }
+    console.log('buttons', obj);
     return obj;
   }
 
