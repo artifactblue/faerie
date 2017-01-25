@@ -13,21 +13,31 @@ var SendText = LineMessaging.SendText;
 var imgur = require('imgur');
 var Promise = require("bluebird");
 
-function uploadImages (respBody) {
+var sendImageString = "";
+
+function uploadImages (res, respBody) {
+  console.log('uploadImages---1');
   for(var index in respBody){
     var imgUrl = respBody[index].images;
-
+    if(index >= 0 && index <= 4)
     imgur.uploadUrl(imgUrl)
         .then(function (json) {
             var imgurUrl = json.data.link;
             imgurUrl = imgurUrl.replace(/^http:\/\//i, 'https://');
             // image.push(new SendImage(imgurUrl, imgurUrl));
-            sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')";
+            // sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')";
+            res.reply(new SendImage(imgurUrl, imgurUrl));
+            console.log("?????", imgurUrl);
         })
         .catch(function (err) {
             console.error(err.message);
         });
   }
+}
+
+function pushImageByLine (res) {
+  console.log('pushImageByLine---2');
+  // eval("res.reply(sendImageString);");
 }
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage;
@@ -181,21 +191,32 @@ module.exports = function(robot){
     // var imgae = SendImage();
     var comic = res.match[1];
     var vol = res.match[2];
-    var sendImageString = "";
+    sendImageString = "";
     // Fetch from comicr node service api
     robot.http("https://mighty-spire-72176.herokuapp.com/api/" + comic + "/" + vol)
       .get()(function(err, resp, body) {
         var respBody = JSON.parse(body);
         // var image = [];
-
-       Promise.promisify(uploadImages(respBody))
-       .then(function(){
-          eval("res.reply(sendImageString);");
-          console.log("#######", sendImageString);
-        })
-       .catch(function(err) {
-          res.status(500).send(err);
+        var promiseArray= [];
+        promiseArray.push(new Promise(function(resolve) {
+          resolve(uploadImages(res, respBody));
+        }));
+        // promiseArray.push(new Promise(function(resolve) {
+        //   resolve(pushImageByLine(res));
+        // }));
+        Promise.each(promiseArray, function() {
+          console.log("promise works!");
         });
+
+        // Promise.each(
+        //   uploadImages(respBody)
+        //   ).then(function(){
+        //     eval("res.reply(sendImageString);");
+        //     console.log("#######", sendImageString);
+        //   })
+        // .catch(function(err) {
+        //     res.status(500).send(err);
+        //   });
       });
 
   });
