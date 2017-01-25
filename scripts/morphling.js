@@ -155,7 +155,7 @@ module.exports = function(robot){
         }
       ]
     });
-
+    console.log('postData', postData);
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .header('Content-Type', 'application/json')
@@ -231,6 +231,7 @@ module.exports = function(robot){
     if (entity.status == userSubscription.SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
         comic.read().then(function(comicResult){
+          console.log('subscribe', comicResult);
           pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 訂閱完成");
         });
       }).catch(function(err){
@@ -239,6 +240,7 @@ module.exports = function(robot){
     } else if (entity.status = userSubscription.UNSUBSCRIBE) {
       userSubscription.update(entity).then(function(result){
         comic.read().then(function(comicResult){
+          console.log('unsubscribe', comicResult);
           pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 已取消訂閱");
         });
       }).catch(function(err){
