@@ -48,7 +48,7 @@ module.exports = function(robot){
     var result = false;
     var postbackMsg = message.message;
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
-      console.log(message.message);
+      //console.log(message.message);
       result = true;
       robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
         .header('Authorization', "Bearer " + LINE_TOKEN)
@@ -128,7 +128,7 @@ module.exports = function(robot){
    * List all comic subscription
    */
   robot.hear(/list/i, function(res){
-    userSubscription.read(res.message.user.id).then(function(result){
+    userSubscription.readByUserId(res.message.user.id).then(function(result){
       var msg = buildButton("subscription list", result);
       res.reply(msg);
     });
@@ -230,18 +230,22 @@ module.exports = function(robot){
   function subscriptionComic(entity) {
     if (entity.status == userSubscription.SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
-        comic.read().then(function(comicResult){
+        comic.read(entity.comicId).then(function(comicResult){
           console.log('subscribe', comicResult);
-          pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 訂閱完成");
+          if (comicResult.rowCount > 0) {
+            pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 訂閱完成");
+          }
         });
       }).catch(function(err){
         console.log(err);
       });
     } else if (entity.status = userSubscription.UNSUBSCRIBE) {
       userSubscription.update(entity).then(function(result){
-        comic.read().then(function(comicResult){
+        comic.read(entity.comicId).then(function(comicResult){
           console.log('unsubscribe', comicResult);
-          pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 已取消訂閱");
+          if (comicResult.rowCount > 0) {
+            pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 已取消訂閱");
+          }
         });
       }).catch(function(err){
         console.log(err);
