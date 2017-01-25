@@ -48,7 +48,6 @@ module.exports = function(robot){
     var result = false;
     var postbackMsg = message.message;
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
-      //console.log(message.message);
       result = true;
       robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
         .header('Authorization', "Bearer " + LINE_TOKEN)
@@ -155,7 +154,6 @@ module.exports = function(robot){
         }
       ]
     });
-    console.log('postData', postData);
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .header('Content-Type', 'application/json')
@@ -221,7 +219,6 @@ module.exports = function(robot){
           "actions": actions
       }
     }
-    console.log('buttons', obj);
     return obj;
   }
 
@@ -232,7 +229,6 @@ module.exports = function(robot){
     if (entity.status == userSubscription.SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
         comic.read(entity.comicId).then(function(comicResult){
-          console.log('subscribe', comicResult);
           if (comicResult.rowCount > 0) {
             pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 訂閱完成");
           }
@@ -243,7 +239,6 @@ module.exports = function(robot){
     } else if (entity.status = userSubscription.UNSUBSCRIBE) {
       userSubscription.update(entity).then(function(result){
         comic.read(entity.comicId).then(function(comicResult){
-          console.log('unsubscribe', comicResult);
           if (comicResult.rowCount > 0) {
             pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 已取消訂閱");
           }
