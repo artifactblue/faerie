@@ -8,7 +8,7 @@ UserSubscription.prototype.UNSUBSCRIBE = 'UNSUBSCRIBE';
 
 UserSubscription.prototype.readByUserId = function(id, limit = 3) {
     return pool.query('SELECT * FROM userSubscription'
-    	+ ' LEFT JOIN comic ON userSubscription.comicId = comic.id WHERE status = $1 userId = $2 LIMIT $3', 
+    	+ ' LEFT JOIN comic ON userSubscription.comicId = comic.id WHERE status = $1 AND userId = $2 LIMIT $3', 
     	[UserSubscription.prototype.SUBSCRIBE, id, limit]);
 };
 

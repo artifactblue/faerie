@@ -298,7 +298,7 @@ module.exports = function(robot){
       "altText": altText,
       "template": {
           "type": "buttons",
-          "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
+          "thumbnailImageUrl": "https://s-media-cache-ak0.pinimg.com/736x/a3/09/06/a309069d76b596b51baa60d6c526cb94.jpg",
           "title": "訂閱清單",
           "text": "點選取消訂閱",
           "actions": actions
