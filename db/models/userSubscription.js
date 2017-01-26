@@ -11,10 +11,11 @@ UserSubscription.prototype.readByUserId = function(id, limit = 3) {
 };
 
 UserSubscription.prototype.create = function(entity) {
-	return pool.query('INSERT INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) VALUES ($1, $2, $3, now())'
-		// + 'ON CONFLICT (UserId, ComicId) DO NOTHING'
+	return pool.query('INSERT INTO userSubscription (UserId, ComicId, Status, CreateTimestamp) '
+		+ ' SELECT $1, $2, $3, now() '
+		+ ' WHERE NOT EXISTS (SELECT 1 FROM userSubscription WHERE UserId = $4 AND ComicId = $5 AND Status = $6)'
 		, 
-		[entity.userId, entity.comicId, entity.status]);
+		[entity.userId, entity.comicId, entity.status, entity.userId, entity.comicId, entity.status]);
 }
 
 UserSubscription.prototype.update = function(entity) {
