@@ -261,7 +261,7 @@ module.exports = function(robot){
           {
             "type": "uri",
             "label": "線上觀看",
-            "uri": "https://github.com/Ksetra/morphling"
+            "uri": "https://github.com/Ksetra/faerie"
           },
           {
             "type": "postback",

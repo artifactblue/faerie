@@ -1,4 +1,4 @@
-# Morphling
+# faerie
 
 Line bot API for creating evenything
 
@@ -38,7 +38,7 @@ homebrew install postgres
 export DATABASE_URL=postgres://...
 
 -- connect to postgres on heroku
-heroku pg:psql DATABASE_URL --app morphling
+heroku pg:psql DATABASE_URL --app faerie
 
 ```
 
@@ -66,7 +66,7 @@ heroku redis:cli -a {app} -c {app}
 export HUBOT_HEROKU_KEEPALIVE_URL=https://2919a97d.ngrok.io
 export HUBOT_LINE_CHANNEL_ID=
 export HUBOT_LINE_TOKEN=
-export HUBOT_NAME=morphling
+export HUBOT_NAME=faerie
 export LINE_CHANNEL_SECRET=
 export DATABASE_URL=
 export REDIS_URL=
@@ -79,7 +79,7 @@ npm install ngrok -g
 ngrok http 8080
 -- copy ngork https to line webhook
 
--- run morphling
+-- run faerie
 bin/hubot -a line-messaging-api
 ```
 
