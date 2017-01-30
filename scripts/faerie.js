@@ -16,6 +16,10 @@ var userSubscription = require('../db/models/userSubscription.js');
 var imgur = require('imgur');
 var Promise = require("bluebird");
 
+// rss feed parser
+var FeedParser = require('feedparser');
+var request = require('request'); // for fetching the feed
+
 var sendImageString = "";
 
 function uploadImages (res, respBody) {
@@ -196,6 +200,80 @@ module.exports = function(robot){
         //   });
       });
 
+  });
+
+  robot.hear(/rss/i, function(res){
+    // set number
+    // var number = res.match[1];
+    // request rss link
+    var req = request('http://feeds.feedburner.com/engadget/cstb')
+    var feedparser = new FeedParser();
+
+    req.on('error', function (error) {
+      // handle any request errors
+    });
+
+    req.on('response', function (res) {
+      var stream = this; // `this` is `req`, which is a stream
+
+      if (res.statusCode !== 200) {
+        this.emit('error', new Error('Bad status code'));
+      }
+      else {
+        stream.pipe(feedparser);
+      }
+    });
+
+    feedparser.on('error', function (error) {
+      // always handle errors
+    });
+
+    feedparser.on('meta', function (meta) {
+      console.log('===== %s =====', meta.title);
+    });
+
+    feedparser.on('readable', function () {
+      // This is where the action is!
+      var stream = this; // `this` is `feedparser`, which is a stream
+      var meta = this.meta; // **NOTE** the "meta" is always available in the context of the feedparser instance
+      var item;
+      var columns = [];
+
+      while (item = stream.read()) {
+        console.log('Got article: %s', item.title || item.description);
+        // console.log('whole item', item);
+        var carousel = {
+          "thumbnailImageUrl": item.image.url,
+          "title": item.title,
+          "text": item.description,
+          "actions": [
+            {
+              "type": "uri",
+              "label": "線上觀看",
+              "uri": item.link
+            },
+            {
+              "type": "postback",
+              "label": "訂閱[" + data.comicname + "]",
+              "data": "status=" + userSubscription.SUBSCRIBE + "&comicId=" + data.id
+            }
+          ]
+        };
+        columns.push(carousel);
+      }
+
+      var obj = {
+        "type": "template",
+        "altText": "Engadget",
+        "template": {
+            "type": "carousel",
+            "columns": columns
+        }
+      }
+
+      res.reply(obj);
+
+    });
   });
 
   robot.hear(/subscribe/i, function(res){
