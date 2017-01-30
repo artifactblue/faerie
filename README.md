@@ -208,6 +208,9 @@ Add the subdomain hubot should connect to. If you web URL looks like
 
 [hubot-adapters]: https://github.com/github/hubot/blob/master/docs/adapters.md
 
+## Open http 8080 for line dev account 
+ngrok http 8080
+
 ## Restart the bot
 
 You may want to get comfortable with `heroku logs` and `heroku restart` if
