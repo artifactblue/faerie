@@ -25,6 +25,11 @@ var FEED_LIMIT = 3
 var DESCRIPTION_LENGTH = 60
 var sendImageString = ""
 
+var {
+ SUBSCRIBE,
+ UNSUBSCRIBE,
+} = userSubscription
+
 function uploadImages (res, respBody) {
   console.log('uploadImages---1')
   for(var index in respBody){
@@ -240,7 +245,7 @@ module.exports = function(robot){
             {
               "type": "postback",
               "label": "訂閱",
-              "data": "status=1&comicId=1"
+              "data": "status=" + SUBSCRIBE + "&rssId=1"
             }
           ]
         }
@@ -378,85 +383,87 @@ module.exports = function(robot){
       })
   }
 
-  /**
-   * Build comic carousel
-   */
-  function buildCarousel(altText, result) {
-    var columns = []
-    result.rows.forEach(function(data){
-      var carousel = {
-        "thumbnailImageUrl": data.thumbnail,
-        "title": data.comicname,
-        "text": data.lastvolnumber,
-        "actions": [
-          {
-            "type": "uri",
-            "label": "線上觀看",
-            "uri": "https://github.com/Ksetra/faerie"
-          },
-          {
-            "type": "postback",
-            "label": "訂閱[" + data.comicname + "]",
-            "data": "status=" + userSubscription.SUBSCRIBE + "&comicId=" + data.id
-          }
-        ]
-      }
-      columns.push(carousel)
-    })
-    var obj = {
-      "type": "template",
-      "altText": altText,
-      "template": {
-          "type": "carousel",
-          "columns": columns
-      }
-    }
-    return obj
-  }
+  // /**
+  //  * Build comic carousel
+  //  */
+  // function buildCarousel(altText, result) {
+  //   var columns = []
+  //   result.rows.forEach(function(data){
+  //     var carousel = {
+  //       "thumbnailImageUrl": data.thumbnail,
+  //       "title": data.comicname,
+  //       "text": data.lastvolnumber,
+  //       "actions": [
+  //         {
+  //           "type": "uri",
+  //           "label": "線上觀看",
+  //           "uri": "https://github.com/Ksetra/faerie"
+  //         },
+  //         {
+  //           "type": "postback",
+  //           "label": "訂閱[" + data.comicname + "]",
+  //           "data": "status=" + userSubscription.SUBSCRIBE + "&comicId=" + data.id
+  //         }
+  //       ]
+  //     }
+  //     columns.push(carousel)
+  //   })
+  //   var obj = {
+  //     "type": "template",
+  //     "altText": altText,
+  //     "template": {
+  //         "type": "carousel",
+  //         "columns": columns
+  //     }
+  //   }
+  //   return obj
+  // }
 
-  function buildButton(altText, result) {
-    var actions = []
-    result.rows.forEach(function(data){
-      var action = {
-        "type": "postback",
-        "label": "取消訂閱[" + data.comicname + "]",
-        "data": "status=" + userSubscription.UNSUBSCRIBE + "&comicId=" + data.id
-      }
-      actions.push(action)
-    })
-    var obj = {
-      "type": "template",
-      "altText": altText,
-      "template": {
-          "type": "buttons",
-          "thumbnailImageUrl": "https://s-media-cache-ak0.pinimg.com/736x/a3/09/06/a309069d76b596b51baa60d6c526cb94.jpg",
-          "title": "訂閱清單",
-          "text": "點選取消訂閱",
-          "actions": actions
-      }
-    }
-    return obj
-  }
+  // function buildButton(altText, result) {
+  //   var actions = []
+  //   result.rows.forEach(function(data){
+  //     var action = {
+  //       "type": "postback",
+  //       "label": "取消訂閱[" + data.comicname + "]",
+  //       "data": "status=" + userSubscription.UNSUBSCRIBE + "&comicId=" + data.id
+  //     }
+  //     actions.push(action)
+  //   })
+  //   var obj = {
+  //     "type": "template",
+  //     "altText": altText,
+  //     "template": {
+  //         "type": "buttons",
+  //         "thumbnailImageUrl": "https://s-media-cache-ak0.pinimg.com/736x/a3/09/06/a309069d76b596b51baa60d6c526cb94.jpg",
+  //         "title": "訂閱清單",
+  //         "text": "點選取消訂閱",
+  //         "actions": actions
+  //     }
+  //   }
+  //   return obj
+  // }
 
   /**
    * Do subscribe
    */
   function subscriptionRss(entity) {
-    if (entity.status == userSubscription.SUBSCRIBE) {
+    if (entity.status == SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
         rss.read(entity.rssId).then(function(rssResult){
           if (rssResult.rowCount > 0) {
-            pushMessage(entity.userId, "[" + rssResult.rows[0].rssname + "] 訂閱完成")
+            var rssResultData = rssResult.rows[0];
+            pushMessage(entity.userId, "[" + rssResultData.rssname + "] 訂閱完成")
           }
         })
       }).catch(function(err){
         console.log(err)
       })
-    } else if (entity.status = userSubscription.UNSUBSCRIBE) {
+    } else if (entity.status = UNSUBSCRIBE) {
       userSubscription.update(entity).then(function(result){
         rss.read(entity.rssId).then(function(rssResult){
-          if (comicResult.rowCount > 0) {
-            pushMessage(entity.userId, "[" + rssResult.rows[0].rssname + "] 已取消訂閱")
+          if (rssResult.rowCount > 0) {
+            var rssResultData = rssResult.rows[0];
+            pushMessage(entity.userId, "[" + rssResultData.rssname + "] 已取消訂閱")
           }
         })
       }).catch(function(err){
