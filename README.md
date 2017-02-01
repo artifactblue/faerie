@@ -211,6 +211,20 @@ Add the subdomain hubot should connect to. If you web URL looks like
 ## Open http 8080 for line dev account 
 ngrok http 8080
 
+## RSS reference
+- 資訊
+    - http://feeds.feedburner.com/engadget/cstb
+    - http://www.bnext.com.tw/feed/rss/topicslinks
+    - http://feeds.feedburner.com/Iphonetw
+- 正妹
+    - http://a305020.pixnet.net/blog/feed/rss
+    - http://blog.xuite.net/louiewong/blog/rss.xml
+    - http://ookkk.blogspot.com/feeds/posts/default
+- 生活
+    - http://www.brain.com.tw/Resource/Rss_News.aspx
+    - http://www.readgoing.com/?feed=rss2
+    - http://tw.movie.yahoo.com/rss/headline
+
 ## Restart the bot
 
 You may want to get comfortable with `heroku logs` and `heroku restart` if
