@@ -57,7 +57,7 @@ function pushImageByLine (res) {
 }
 
 function getRssLinks (res, entity) {
-  rss.readByCategoryId(entity).then(function(result){
+  rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
     var msg = buildCarouselByCategory("rss list", result)
     res.reply(msg)
   })
