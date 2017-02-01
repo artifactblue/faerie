@@ -56,6 +56,13 @@ function pushImageByLine (res) {
   // eval("res.reply(sendImageString)")
 }
 
+function getRssLinks (res, entity) {
+  rss.readByCategoryId(entity).then(function(result){
+    var msg = buildCarouselByCategory("rss list", result)
+    res.reply(msg)
+  })
+}
+
 function getRssFeeds (res, rssUrl, limit, offset) {
   // request rss link
   var req = request(rssUrl)
@@ -216,6 +223,7 @@ module.exports = function(robot){
     } 
     if (entity.categoryId) {
       // TODO show rss feed list
+      getRssLinks(res, entity);
     }
   })
 
@@ -410,6 +418,34 @@ module.exports = function(robot){
             "type": "postback",
             "label": "顯示[" + data.name + "]",
             "data": "limit=3&offset=0&categoryId=" + data.id
+          }
+        ]
+      }
+      columns.push(carousel)
+    })
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "carousel",
+          "columns": columns
+      }
+    }
+    return obj
+  }
+
+  function buildCarouselByCategory (altText, result) {
+    var columns = []
+    result.rows.forEach(function(data){
+      var carousel = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.rssname,
+        "text": data.rssname,
+        "actions": [
+          {
+            "type": "postback",
+            "label": "顯示[" + data.rssname + "]",
+            "data": "limit=3&offset=0&rssId=" + data.id
           }
         ]
       }
