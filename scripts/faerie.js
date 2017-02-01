@@ -211,6 +211,8 @@ module.exports = function(robot){
     var feedparser = new FeedParser()
     var feedNumber = 0
     var columns = []
+    var _res = Object.assign({}, res)
+    // _res.reply = res.reply;
 
     req.on('error', function (error) {
       // handle any request errors
@@ -218,9 +220,6 @@ module.exports = function(robot){
 
     req.on('response', function (res) {
       var stream = this // `this` is `req`, which is a stream
-      // feedparser.prototype.res = res
-      // console.log('res!!!!', res)
-      // feedparser.prototype.res = res
 
       if (res.statusCode !== 200) {
         this.emit('error', new Error('Bad status code'))
@@ -238,18 +237,20 @@ module.exports = function(robot){
       console.log('===== %s =====', meta.title)
     })
 
-    feedparser.on('readable', function (res) {
+    feedparser.on('readable', function () {
       // This is where the action is!
       var stream = this // `this` is `feedparser`, which is a stream
       var meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance
       var item
-      // console.log('res?????', this.res)
 
       while (item = stream.read()) {
         console.log('Got article: %s', item.title || item.description)
 
         var description = item.description
         var imgUrl = "https" + description.match(/:\/\/[^">]+/g)
+        var feedLink = item.link
+        feedLink = feedLink.replace(/^http:\/\//i, 'https://')
+        console.log('Got link: %s', feedLink)
 
         var carousel = {
           "thumbnailImageUrl": imgUrl,
@@ -259,7 +260,7 @@ module.exports = function(robot){
             {
               "type": "uri",
               "label": "線上觀看",
-              "uri": item.link
+              "uri": feedLink
             },
             {
               "type": "postback",
@@ -279,12 +280,98 @@ module.exports = function(robot){
                 "columns": columns
             }
           }
-          // console.log('columns!!!!!', res)
-          res.reply(obj)
+          console.log('columns!!!!!', columns)
+          _res.reply(obj)
+          // _res.reply(obj)
         }
         feedNumber++
       }
     })
+  })
+
+  robot.hear(/a/i, function(res) {
+    var btntemp = {
+      "type": "template",
+      "altText": "this is a buttons template",
+      "template": {
+          "type": "buttons",
+          "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
+          "title": "Menu",
+          "text": "Please select",
+          "actions": [
+              {
+                "type": "postback",
+                "label": "Buy",
+                "data": "action=buy&itemid=123"
+              },
+              {
+                "type": "postback",
+                "label": "Add to cart",
+                "data": "action=add&itemid=123"
+              },
+              {
+                "type": "uri",
+                "label": "View detail",
+                "uri": "http://example.com/page/123"
+              }
+          ]
+      }
+    }
+
+    var carouselTemp = {
+      "type": "template",
+      "altText": "this is a carousel template",
+      "template": {
+          "type": "carousel",
+          "columns": [
+              {
+                "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
+                "title": "this is menu",
+                "text": "description",
+                "actions": [
+                    {
+                        "type": "postback",
+                        "label": "Buy",
+                        "data": "action=buy&itemid=111"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "Add to cart",
+                        "data": "action=add&itemid=111"
+                    },
+                    {
+                        "type": "uri",
+                        "label": "View detail",
+                        "uri": "http://example.com/page/111"
+                    }
+                ]
+              },
+              {
+                "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+                "title": "this is menu",
+                "text": "description",
+                "actions": [
+                    {
+                        "type": "postback",
+                        "label": "Buy",
+                        "data": "action=buy&itemid=222"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "Add to cart",
+                        "data": "action=add&itemid=222"
+                    },
+                    {
+                        "type": "uri",
+                        "label": "View detail",
+                        "uri": "http://example.com/page/222"
+                    }
+                ]
+              }
+          ]
+      }
+    }
+    res.reply(carouselTemp)
   })
 
   robot.hear(/subscribe/i, function(res){
