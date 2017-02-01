@@ -12,6 +12,7 @@ var rss = require('../db/models/rss.js')
 var users = require('../db/models/users.js')
 var userSubscription = require('../db/models/userSubscription.js')
 var category = require('../db/models/category.js')
+var BuildTemplateMessage = LineMessaging.BuildTemplateMessage
 
 // 3rd party libs
 var imgur = require('imgur')
@@ -56,14 +57,8 @@ function pushImageByLine (res) {
   // eval("res.reply(sendImageString)")
 }
 
-
-
-const BuildTemplateMessage = LineMessaging.BuildTemplateMessage
-
-const LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
-
 module.exports = function(robot){
-
+  var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
   /**
    * Image URL (Max: 1000 characters)
    * HTTPS
@@ -83,7 +78,7 @@ module.exports = function(robot){
       result = true
     }
     var user = message.user
-    robot.brain.set('USER:' + user.id, user)
+    //robot.brain.set('USER:' + user.id, user)
     return result
   }
 
@@ -100,6 +95,7 @@ module.exports = function(robot){
         .get()(function(err, resp, body) {
           var respBody = JSON.parse(body)
           var entity = {id: respBody.userId, displayName: respBody.displayName}
+          console.log('entity: ', entity);
           users.create(entity).then(function(result){
             console.log(respBody.userId + ' updated')
           })
