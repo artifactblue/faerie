@@ -338,7 +338,8 @@ module.exports = function(robot){
     var columns = []
     result.rows.forEach(function(data){
       var carousel = {
-        "thumbnailImageUrl": data.thumbnail,
+        // "thumbnailImageUrl": data.thumbnail,
+        "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
         "title": data.rssname,
         "text": data.rssname,
         "actions": [
