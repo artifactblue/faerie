@@ -447,6 +447,7 @@ module.exports = function(robot){
    * Do subscribe
    */
   function subscriptionRss(entity) {
+    console.log('subscriptionRss: ', entity)
     if (entity.status == SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
         rss.read(entity.rssId).then(function(rssResult){
