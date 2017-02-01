@@ -12,7 +12,8 @@ Rss.prototype.readAll = function(limit = 3, offset = 0) {
 }
 
 Rss.prototype.readByCategoryId = function(categoryId, limit = 3, offset = 0) {
-	return pool.query('SELECT * FROM rss WHERE categoryId = $1 ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset, [categoryId]);
+
+	return pool.query('SELECT * FROM rss WHERE categoryId = $1 ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset, [parseInt(categoryId, 10)]);
 }
 
 Rss.prototype.create = function(entity) {
