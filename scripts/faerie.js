@@ -95,7 +95,6 @@ module.exports = function(robot){
         .get()(function(err, resp, body) {
           var respBody = JSON.parse(body)
           var entity = {id: respBody.userId, displayName: respBody.displayName}
-          console.log('entity: ', entity);
           users.create(entity).then(function(result){
             console.log(respBody.userId + ' updated')
           })
