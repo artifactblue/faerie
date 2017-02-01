@@ -176,7 +176,7 @@ module.exports = function(robot){
     if (entity.categoryId) {
       // TODO show rss feed list
       // console.log('#1 getRssLinks', res, entity)
-      getRssLinks(res, entity);
+      getRssLinks(entity);
     }
   })
 
@@ -303,6 +303,21 @@ module.exports = function(robot){
       })
   }
 
+  function pushCarousel(user, carousel) {
+    var postData = JSON.stringify({
+      "to": user,
+      "messages":[
+        carousel
+      ]
+    })
+    robot.http("https://api.line.me/v2/bot/message/push")
+      .header('Authorization', "Bearer " + LINE_TOKEN)
+      .header('Content-Type', 'application/json')
+      .post(postData)(function(err, resp, body) {
+        console.log(err, resp, body)
+      })
+  }
+
   /**
    * Build rss carousel
    */
@@ -419,10 +434,10 @@ module.exports = function(robot){
     }
   }
 
-  function getRssLinks (res, entity) {
+  function getRssLinks (entity) {
     rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
       var msg = buildCarouselByCategory("rss list", result)
-      res.reply(msg)
+      pushCarousel(entity.userId, msg);
     })
   }
 
