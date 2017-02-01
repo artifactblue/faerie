@@ -4,6 +4,9 @@
  */
 var pg = require('pg')
 
+var MAX = 10
+var IDLE_TIMEOUT_MILLIS = 30000
+
 // create a config to configure both pooling behavior
 // and client options
 // note: all config is optional and the environment variables
@@ -14,8 +17,8 @@ var config = {
     password: process.env.PGPASSWORD, //env var: PGPASSWORD
     host: process.env.PGHOST, // Server hosting the postgres database
     port: process.env.PGPORT, //env var: PGPORT
-    max: 10, // max number of clients in the pool
-    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+    max: MAX, // max number of clients in the pool
+    idleTimeoutMillis: IDLE_TIMEOUT_MILLIS // how long a client is allowed to remain idle before being closed
 }
 
 //this initializes a connection pool
