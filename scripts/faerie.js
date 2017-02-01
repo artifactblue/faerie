@@ -278,7 +278,13 @@ module.exports = function(robot){
    * push notification
    */
   robot.hear(/push/i, function(res){
-    pushMessage('U33823165fc452e43a0a66ad60fba52bf', "通知")
+    var message = [
+      {
+        "type": "text",
+        "text": "通知"
+      }
+    ]
+    pushMessage('U33823165fc452e43a0a66ad60fba52bf', message)
     res.reply(new SendText('通知服務'))
   })
 
@@ -288,12 +294,7 @@ module.exports = function(robot){
   function pushMessage(user, message) {
     var postData = JSON.stringify({
       "to": user,
-      "messages":[
-        {
-          "type": "text",
-          "text": message
-        }
-      ]
+      "messages": message
     })
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
@@ -302,22 +303,6 @@ module.exports = function(robot){
         console.log(err, resp, body)
       })
   }
-
-  function pushCarousel(user, carousel) {
-    var postData = JSON.stringify({
-      "to": user,
-      "messages":[
-        carousel
-      ]
-    })
-    robot.http("https://api.line.me/v2/bot/message/push")
-      .header('Authorization', "Bearer " + LINE_TOKEN)
-      .header('Content-Type', 'application/json')
-      .post(postData)(function(err, resp, body) {
-        console.log(err, resp, body)
-      })
-  }
-
 
   /**
    * Build rss carousel
@@ -415,7 +400,13 @@ module.exports = function(robot){
         rss.read(entity.rssId).then(function(rssResult){
           if (rssResult.rowCount > 0) {
             var rssResultData = rssResult.rows[0];
-            pushMessage(entity.userId, "[" + rssResultData.rssname + "] 訂閱完成")
+            var message = [
+              {
+                "type": "text",
+                "text": "[" + rssResultData.rssname + "] 訂閱完成"
+              }
+            ]
+            pushMessage(entity.userId, message)
           }
         })
       }).catch(function(err){
@@ -426,7 +417,13 @@ module.exports = function(robot){
         rss.read(entity.rssId).then(function(rssResult){
           if (rssResult.rowCount > 0) {
             var rssResultData = rssResult.rows[0];
-            pushMessage(entity.userId, "[" + rssResultData.rssname + "] 已取消訂閱")
+            var message = [
+              {
+                "type": "text",
+                "text": "[" + rssResultData.rssname + "] 已取消訂閱"
+              }
+            ]
+            pushMessage(entity.userId, message)
           }
         })
       }).catch(function(err){
@@ -437,8 +434,10 @@ module.exports = function(robot){
 
   function getRssLinks (entity) {
     rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
-      var msg = buildCarouselByCategory("rss list", result)
-      pushCarousel(entity.userId, msg)
+      var message = [
+        buildCarouselByCategory("rss list", result)
+      ]
+      pushMessage(entity.userId, message)
     })
   }
 
