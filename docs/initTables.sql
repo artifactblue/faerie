@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS Rss (
 	rssName text,
 	rssUrl text,
 	thumbnail text,
-	createTimestamp timestamp with time zone
+	createTimestamp timestamp with time zone,
+	lastUpdateTimestamp timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS UserSubscription (
