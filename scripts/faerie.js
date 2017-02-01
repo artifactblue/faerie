@@ -11,6 +11,7 @@ var SendText = LineMessaging.SendText
 var rss = require('../db/models/rss.js')
 var users = require('../db/models/users.js')
 var userSubscription = require('../db/models/userSubscription.js')
+var category = require('../db/models/category.js')
 
 // 3rd party libs
 var imgur = require('imgur')
@@ -118,7 +119,12 @@ module.exports = function(robot){
       entity[data[0]] = data[1]
     })
 
-    subscriptionRss(entity)
+    if (entity.status) {
+      subscriptionRss(entity)
+    } 
+    if (entity.categoryId) {
+      // TODO show rss feed list
+    }
   })
 
   /**
@@ -150,7 +156,7 @@ module.exports = function(robot){
    * Support on this bot
    */
   robot.hear(/help/i, function(res){
-    var text1 = new SendText('輸入 [top]，顯示Top 3推薦漫畫')
+    var text1 = new SendText('輸入 [top]，顯示 Top 3 推薦類別')
     var text2 = new SendText('輸入 [list]，顯示訂閱清單')
     var text3 = new SendText('輸入 [whoami]，顯示個人資訊')
     res.reply(text1, text2, text3)
@@ -160,10 +166,10 @@ module.exports = function(robot){
    * Get Top 3 rss
    */
   robot.hear(/top/i, function(res){
-    // var comicList = comic.readAll().then(function(result){
-    //   var msg = buildCarousel("comic recommend", result)
-    //   res.reply(msg)
-    // })
+    var categoryList = category.readAll().then(function(result){
+      var msg = buildCarousel("category recommend", result)
+      res.reply(msg)
+    })
   })
 
   /**
@@ -383,41 +389,36 @@ module.exports = function(robot){
       })
   }
 
-  // /**
-  //  * Build comic carousel
-  //  */
-  // function buildCarousel(altText, result) {
-  //   var columns = []
-  //   result.rows.forEach(function(data){
-  //     var carousel = {
-  //       "thumbnailImageUrl": data.thumbnail,
-  //       "title": data.comicname,
-  //       "text": data.lastvolnumber,
-  //       "actions": [
-  //         {
-  //           "type": "uri",
-  //           "label": "線上觀看",
-  //           "uri": "https://github.com/Ksetra/faerie"
-  //         },
-  //         {
-  //           "type": "postback",
-  //           "label": "訂閱[" + data.comicname + "]",
-  //           "data": "status=" + userSubscription.SUBSCRIBE + "&comicId=" + data.id
-  //         }
-  //       ]
-  //     }
-  //     columns.push(carousel)
-  //   })
-  //   var obj = {
-  //     "type": "template",
-  //     "altText": altText,
-  //     "template": {
-  //         "type": "carousel",
-  //         "columns": columns
-  //     }
-  //   }
-  //   return obj
-  // }
+  /**
+   * Build rss carousel
+   */
+  function buildCarousel(altText, result) {
+    var columns = []
+    result.rows.forEach(function(data){
+      var carousel = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.name,
+        "text": data.name,
+        "actions": [
+          {
+            "type": "postback",
+            "label": "顯示[" + data.name + "]",
+            "data": "limit=3&offset=0&categoryId=" + data.id
+          }
+        ]
+      }
+      columns.push(carousel)
+    })
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "carousel",
+          "columns": columns
+      }
+    }
+    return obj
+  }
 
   function buildButton(altText, result) {
     var actions = []

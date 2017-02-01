@@ -1,6 +1,6 @@
-INSERT INTO Category (id, name, createTimestamp) VALUES (1, '資訊', now());
-INSERT INTO Category (id, name, createTimestamp) VALUES (2, '正妹', now());
-INSERT INTO Category (id, name, createTimestamp) VALUES (3, '生活', now());
+INSERT INTO Category (id, name, thumbnail, createTimestamp) VALUES (1, '資訊', 'https://i.imgur.com/dsECxwV.jpg', now());
+INSERT INTO Category (id, name, thumbnail, createTimestamp) VALUES (2, '正妹', 'https://i.imgur.com/J0lXGUg.jpg', now());
+INSERT INTO Category (id, name, thumbnail, createTimestamp) VALUES (3, '生活', 'https://i.imgur.com/lSoGKrH.jpg', now());
 
 INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (1, 'Engadget', 'http://feeds.feedburner.com/engadget/cstb', '', now());
 INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (1, 'bnext', 'http://www.bnext.com.tw/feed/rss/topicslinks', '', now());
