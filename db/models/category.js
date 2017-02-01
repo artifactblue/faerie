@@ -7,7 +7,7 @@ Category.prototype.read = function(id) {
 };
 
 Category.prototype.readAll = function(limit = 3) {
-       return pool.query('SELECT * FROM category LIMIT ' + limit);
+    return pool.query('SELECT * FROM category LIMIT ' + limit);
 }
 
 Category.prototype.create = function(entity) {

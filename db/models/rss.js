@@ -7,7 +7,7 @@ Rss.prototype.read = function(id) {
 };
 
 Rss.prototype.readAll = function(limit = 3) {
-       return pool.query('SELECT * FROM rss LIMIT ' + limit);
+    return pool.query('SELECT * FROM rss LIMIT ' + limit);
 }
 
 Rss.prototype.create = function(entity) {
