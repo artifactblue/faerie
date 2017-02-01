@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Category (
 	id serial primary key,
 	name text,
+	thumbnail text,
 	createTimestamp timestamp with time zone
 );
 
