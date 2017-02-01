@@ -419,29 +419,29 @@ module.exports = function(robot){
   //   return obj
   // }
 
-  // function buildButton(altText, result) {
-  //   var actions = []
-  //   result.rows.forEach(function(data){
-  //     var action = {
-  //       "type": "postback",
-  //       "label": "取消訂閱[" + data.comicname + "]",
-  //       "data": "status=" + userSubscription.UNSUBSCRIBE + "&comicId=" + data.id
-  //     }
-  //     actions.push(action)
-  //   })
-  //   var obj = {
-  //     "type": "template",
-  //     "altText": altText,
-  //     "template": {
-  //         "type": "buttons",
-  //         "thumbnailImageUrl": "https://s-media-cache-ak0.pinimg.com/736x/a3/09/06/a309069d76b596b51baa60d6c526cb94.jpg",
-  //         "title": "訂閱清單",
-  //         "text": "點選取消訂閱",
-  //         "actions": actions
-  //     }
-  //   }
-  //   return obj
-  // }
+  function buildButton(altText, result) {
+    var actions = []
+    result.rows.forEach(function(data){
+      var action = {
+        "type": "postback",
+        "label": "取消訂閱[" + data.rssname + "]",
+        "data": "status=" + UNSUBSCRIBE + "&rssId=" + data.id
+      }
+      actions.push(action)
+    })
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+          "type": "buttons",
+          "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
+          "title": "訂閱清單",
+          "text": "點選取消訂閱",
+          "actions": actions
+      }
+    }
+    return obj
+  }
 
   /**
    * Do subscribe
