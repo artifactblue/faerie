@@ -213,17 +213,17 @@ ngrok http 8080
 
 ## RSS reference
 - 資訊
-    - http://feeds.feedburner.com/engadget/cstb
-    - http://www.bnext.com.tw/feed/rss/topicslinks
-    - http://feeds.feedburner.com/Iphonetw
+    - http://feeds.feedburner.com/engadget/cstb (Engadget)
+    - http://www.bnext.com.tw/feed/rss/topicslinks (bnext)
+    - http://feeds.feedburner.com/Iphonetw (iphone TW)
 - 正妹
-    - http://a305020.pixnet.net/blog/feed/rss
-    - http://blog.xuite.net/louiewong/blog/rss.xml
-    - http://ookkk.blogspot.com/feeds/posts/default
+    - http://a305020.pixnet.net/blog/feed/rss (美女寫真館)
+    - http://blog.xuite.net/louiewong/blog/rss.xml (正妹日報)
+    - http://ookkk.blogspot.com/feeds/posts/default (正妹星球)
 - 生活
-    - http://www.brain.com.tw/Resource/Rss_News.aspx
-    - http://www.readgoing.com/?feed=rss2
-    - http://tw.movie.yahoo.com/rss/headline
+    - http://www.brain.com.tw/Resource/Rss_News.aspx (動腦-即時新聞)
+    - http://www.readgoing.com/?feed=rss2 (閱讀迷走)
+    - http://tw.movie.yahoo.com/rss/headline (奇摩電影)
 
 ## Restart the bot
 
