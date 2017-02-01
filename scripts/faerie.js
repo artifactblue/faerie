@@ -318,6 +318,7 @@ module.exports = function(robot){
       })
   }
 
+
   /**
    * Build rss carousel
    */
@@ -376,8 +377,8 @@ module.exports = function(robot){
           "columns": columns
       }
     }
-    console.log('#3', util.inspect(obj, false, null))
-    return carouselTemp
+    // console.log('#3', util.inspect(obj, false, null))
+    return obj
   }
 
   function buildButton(altText, result) {
@@ -437,7 +438,7 @@ module.exports = function(robot){
   function getRssLinks (entity) {
     rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
       var msg = buildCarouselByCategory("rss list", result)
-      pushCarousel(entity.userId, msg);
+      pushCarousel(entity.userId, msg)
     })
   }
 
