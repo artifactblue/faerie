@@ -8,7 +8,7 @@ var SendImage = LineMessaging.SendImage
 var SendVideo = LineMessaging.SendVideo
 var SendAudio = LineMessaging.SendAudio
 var SendText = LineMessaging.SendText
-var comic = require('../db/models/comic.js')
+var rss = require('../db/models/rss.js')
 var users = require('../db/models/users.js')
 var userSubscription = require('../db/models/userSubscription.js')
 
@@ -113,7 +113,7 @@ module.exports = function(robot){
       entity[data[0]] = data[1]
     })
 
-    subscriptionComic(entity)
+    subscriptionRss(entity)
   })
 
   /**
@@ -152,57 +152,23 @@ module.exports = function(robot){
   })
 
   /**  
-   * Get Top 3 comic
+   * Get Top 3 rss
    */
   robot.hear(/top/i, function(res){
-    var comicList = comic.readAll().then(function(result){
-      var msg = buildCarousel("comic recommend", result)
-      res.reply(msg)
-    })
+    // var comicList = comic.readAll().then(function(result){
+    //   var msg = buildCarousel("comic recommend", result);
+    //   res.reply(msg);
+    // });
   })
 
   /**
-   * List all comic subscription
+   * List all rss subscription
    */
   robot.hear(/list/i, function(res){
     userSubscription.readByUserId(res.message.user.id).then(function(result){
       var msg = buildButton("subscription list", result)
       res.reply(msg)
     })
-  })
-
-  robot.hear(/show (.*) (.*)/i, function(res){
-    // var imgae = SendImage()
-    var comic = res.match[1]
-    var vol = res.match[2]
-    sendImageString = ""
-    // Fetch from comicr node service api
-    robot.http("https://mighty-spire-72176.herokuapp.com/api/" + comic + "/" + vol)
-      .get()(function(err, resp, body) {
-        var respBody = JSON.parse(body)
-        // var image = []
-        var promiseArray= []
-        promiseArray.push(new Promise(function(resolve) {
-          resolve(uploadImages(res, respBody))
-        }))
-        // promiseArray.push(new Promise(function(resolve) {
-        //   resolve(pushImageByLine(res))
-        // }))
-        Promise.each(promiseArray, function() {
-          console.log("promise works!")
-        })
-
-        // Promise.each(
-        //   uploadImages(respBody)
-        //   ).then(function(){
-        //     eval("res.reply(sendImageString)")
-        //     console.log("#######", sendImageString)
-        //   })
-        // .catch(function(err) {
-        //     res.status(500).send(err)
-        //   })
-      })
-
   })
 
   robot.hear(/rss/i, function(res){
@@ -383,26 +349,6 @@ module.exports = function(robot){
     res.reply(carouselTemp)
   })
 
-  robot.hear(/subscribe/i, function(res){
-    var msg = BuildTemplateMessage
-      .init('Subscribe')
-      .confirm({
-        text: '訂閱海賊王?'
-      })
-      .action('postback', {
-        label: '訂閱',
-        //data: 'subscribe=true&comic=02'
-        text: '訂閱成功'
-        //uri: 'https://www.google.com.tw/search?q=ok'
-      })
-      .action('message', {
-        label: '取消',
-        text: '太可惜了'
-      })
-      .build()
-    res.reply(msg)
-  })
-
   /**
    * push notification
    */
@@ -495,12 +441,12 @@ module.exports = function(robot){
   /**
    * Do subscribe
    */
-  function subscriptionComic(entity) {
+  function subscriptionRss(entity) {
     if (entity.status == userSubscription.SUBSCRIBE) {
       userSubscription.create(entity).then(function(result){
-        comic.read(entity.comicId).then(function(comicResult){
-          if (comicResult.rowCount > 0) {
-            pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 訂閱完成")
+        rss.read(entity.rssId).then(function(rssResult){
+          if (rssResult.rowCount > 0) {
+            pushMessage(entity.userId, "[" + rssResult.rows[0].rssname + "] 訂閱完成")
           }
         })
       }).catch(function(err){
@@ -508,9 +454,9 @@ module.exports = function(robot){
       })
     } else if (entity.status = userSubscription.UNSUBSCRIBE) {
       userSubscription.update(entity).then(function(result){
-        comic.read(entity.comicId).then(function(comicResult){
+        rss.read(entity.rssId).then(function(rssResult){
           if (comicResult.rowCount > 0) {
-            pushMessage(entity.userId, "[" + comicResult.rows[0].comicname + "] 已取消訂閱")
+            pushMessage(entity.userId, "[" + rssResult.rows[0].rssname + "] 已取消訂閱")
           }
         })
       }).catch(function(err){
@@ -518,42 +464,4 @@ module.exports = function(robot){
       })
     }
   }
-
-  // robot.hear(/buttons/i, function(res){
-  //   var msg = BuildTemplateMessage
-  //     .init('this is a template msg')
-  //     .buttons({
-  //       thumbnailImageUrl: 'https://github.com/puresmash/chatting-robot/blob/develope/docs/template.jpg?raw=true',
-  //       title: 'Template Message',
-  //       text: 'Let me google for you'
-  //     })
-  //     .action('uri', {
-  //       label: 'OK',
-  //       uri: 'https://www.google.com.tw/search?q=ok'
-  //     })
-  //     .action('postback', {
-  //       label: 'postback',
-  //       data: 'test=a'
-  //     })
-  //     .build()
-  //   res.reply(msg)
-  // })
-
-  // robot.hear(/confirm/i, function(res){
-  //   var msg = BuildTemplateMessage
-  //   .init('this is a confirm msg')
-  //   .confirm({
-  //       text: 'confirm?'
-  //   })
-  //   .action('uri', {
-  //       label: 'OK',
-  //       uri: 'https://www.google.com.tw/search?q=ok'
-  //   })
-  //   .action('message', {
-  //       label: 'Cancel',
-  //       text: 'cancel request'
-  //   })
-  //   .build()
-  //   res.reply(msg)
-  // })
 }
