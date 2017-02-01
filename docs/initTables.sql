@@ -4,10 +4,17 @@ CREATE TABLE IF NOT EXISTS Users (
 	createTimestamp timestamp with time zone
 );
 
-CREATE TABLE IF NOT EXISTS Comic (
+CREATE TABLE IF NOT EXISTS Category (
 	id serial primary key,
-	comicName text,
-	lastVolNumber text,
+	name text,
+	createTimestamp timestamp with time zone
+);
+
+CREATE TABLE IF NOT EXISTS Rss (
+	id serial primary key,
+	categoryId integer,
+	rssName text,
+	rssUrl text,
 	thumbnail text,
 	createTimestamp timestamp with time zone
 );
@@ -15,15 +22,14 @@ CREATE TABLE IF NOT EXISTS Comic (
 CREATE TABLE IF NOT EXISTS UserSubscription (
 	id serial primary key,
 	userId text,
-	comicId integer,
+	rssId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
 	createTimestamp timestamp with time zone
 );
 
-CREATE TABLE IF NOT EXISTS ComicVols (
+CREATE TABLE IF NOT EXISTS RssView (
 	id serial primary key,
-	comicId integer,
-	vols integer,
-	imageUrl text,
-	createTimestamp timestamp with time zone
+	userId integer,
+	rssId integer,
+	viewTimestamp timestamp with time zone
 );
