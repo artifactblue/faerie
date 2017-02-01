@@ -121,7 +121,7 @@ module.exports = function(robot){
     } 
     if (entity.categoryId) {
       // TODO show rss feed list
-      console.log('#1 getRssLinks', res, entity)
+      // console.log('#1 getRssLinks', res, entity)
       getRssLinks(res, entity);
     }
   })
@@ -334,7 +334,7 @@ module.exports = function(robot){
   }
 
   function buildCarouselByCategory (altText, result) {
-    console.log('#2', altText, result)
+    // console.log('#2', altText, result)
     var columns = []
     result.rows.forEach(function(data){
       var carousel = {
@@ -359,7 +359,7 @@ module.exports = function(robot){
           "columns": columns
       }
     }
-    console.log('#3', obj)
+    console.log('#3', util.inspect(obj, false, null))
     return obj
   }
 
