@@ -156,9 +156,9 @@ module.exports = function(robot){
    */
   robot.hear(/top/i, function(res){
     // var comicList = comic.readAll().then(function(result){
-    //   var msg = buildCarousel("comic recommend", result);
-    //   res.reply(msg);
-    // });
+    //   var msg = buildCarousel("comic recommend", result)
+    //   res.reply(msg)
+    // })
   })
 
   /**
