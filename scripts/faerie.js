@@ -14,13 +14,15 @@ var userSubscription = require('../db/models/userSubscription.js')
 
 // 3rd party libs
 var imgur = require('imgur')
-var Promise = require("bluebird")
+var Promise = require('bluebird')
+var util = require('util')
 
 // rss feed parser
 var FeedParser = require('feedparser')
 var request = require('request') // for fetching the feed
 
 var FEED_LIMIT = 3
+var DESCRIPTION_LENGTH = 60
 var sendImageString = ""
 
 function uploadImages (res, respBody) {
@@ -204,15 +206,12 @@ module.exports = function(robot){
   })
 
   robot.hear(/rss/i, function(res){
-    // set number
-    // var number = res.match[1]
+
     // request rss link
     var req = request('http://feeds.feedburner.com/engadget/cstb')
     var feedparser = new FeedParser()
     var feedNumber = 0
     var columns = []
-    var _res = Object.assign({}, res)
-    // _res.reply = res.reply;
 
     req.on('error', function (error) {
       // handle any request errors
@@ -248,14 +247,24 @@ module.exports = function(robot){
 
         var description = item.description
         var imgUrl = "https" + description.match(/:\/\/[^">]+/g)
+        // remove html tag
+        var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
+        // substring by length
+        if (clearDescription.length > DESCRIPTION_LENGTH) {
+          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3 ) + '...'
+        } else {
+          var trimDescription = clearDescription
+        }
+
         var feedLink = item.link
         feedLink = feedLink.replace(/^http:\/\//i, 'https://')
-        console.log('Got link: %s', feedLink)
+        console.log('Got clearDescription: %s', trimDescription)
 
         var carousel = {
           "thumbnailImageUrl": imgUrl,
           "title": item.title,
-          "text": item.description,
+          "text": trimDescription,
+          // "text": "abc",
           "actions": [
             {
               "type": "uri",
@@ -269,7 +278,7 @@ module.exports = function(robot){
             }
           ]
         }
-        if(feedNumber < FEED_LIMIT) {
+        if (feedNumber < FEED_LIMIT) {
           columns.push(carousel)
         } else if (feedNumber === FEED_LIMIT) {
           var obj = {
@@ -280,8 +289,8 @@ module.exports = function(robot){
                 "columns": columns
             }
           }
-          console.log('columns!!!!!', columns)
-          _res.reply(obj)
+          // console.log('columns!!!!!', util.inspect(columns, false, null))
+          res.reply(obj)
           // _res.reply(obj)
         }
         feedNumber++
