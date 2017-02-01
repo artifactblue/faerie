@@ -56,104 +56,7 @@ function pushImageByLine (res) {
   // eval("res.reply(sendImageString)")
 }
 
-function getRssLinks (res, entity) {
-  rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
-    var msg = buildCarouselByCategory("rss list", result)
-    res.reply(msg)
-  })
-}
 
-function getRssFeeds (res, rssUrl, limit, offset) {
-  // request rss link
-  var req = request(rssUrl)
-  var feedparser = new FeedParser()
-  var feedNumber = 0
-  var columns = []
-
-  req.on('error', function (error) {
-    // handle any request errors
-  })
-
-  req.on('response', function (res) {
-    var stream = this // `this` is `req`, which is a stream
-
-    if (res.statusCode !== 200) {
-      this.emit('error', new Error('Bad status code'))
-    }
-    else {
-      stream.pipe(feedparser)
-    }
-  })
-
-  feedparser.on('error', function (error) {
-    // always handle errors
-  })
-
-  feedparser.on('meta', function (meta) {
-    console.log('===== %s =====', meta.title)
-  })
-
-  feedparser.on('readable', function () {
-    // This is where the action is!
-    var stream = this // `this` is `feedparser`, which is a stream
-    var meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance
-    var item
-
-    while (item = stream.read()) {
-      console.log('Got article: %s', item.title || item.description)
-
-      var description = item.description
-      var imgUrl = "https" + description.match(/:\/\/[^">]+/g)
-      // remove html tag
-      var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
-      // substring by length
-      if (clearDescription.length > DESCRIPTION_LENGTH) {
-        var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3 ) + '...'
-      } else {
-        var trimDescription = clearDescription
-      }
-
-      var feedLink = item.link
-      feedLink = feedLink.replace(/^http:\/\//i, 'https://')
-      console.log('Got clearDescription: %s', trimDescription)
-
-      var carousel = {
-        "thumbnailImageUrl": imgUrl,
-        "title": item.title,
-        "text": trimDescription,
-        "actions": [
-          {
-            "type": "uri",
-            "label": "線上觀看",
-            "uri": feedLink
-          },
-          {
-            "type": "postback",
-            "label": "訂閱",
-            "data": "status=" + SUBSCRIBE + "&rssId=1"
-          }
-        ]
-      }
-      if (feedNumber > offset && feedNumber <= offset + limit) {
-        columns.push(carousel)
-      }
-
-      if (feedNumber === offset + limit) {
-        var obj = {
-          "type": "template",
-          "altText": "Engadget",
-          "template": {
-              "type": "carousel",
-              "columns": columns
-          }
-        }
-        // console.log('columns!!!!!', util.inspect(columns, false, null))
-        res.reply(obj)
-      }
-      feedNumber++
-    }
-  })
-}
 
 const BuildTemplateMessage = LineMessaging.BuildTemplateMessage
 
@@ -514,5 +417,104 @@ module.exports = function(robot){
         console.log(err)
       })
     }
+  }
+
+  function getRssLinks (res, entity) {
+    rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
+      var msg = buildCarouselByCategory("rss list", result)
+      res.reply(msg)
+    })
+  }
+
+  function getRssFeeds (res, rssUrl, limit, offset) {
+    // request rss link
+    var req = request(rssUrl)
+    var feedparser = new FeedParser()
+    var feedNumber = 0
+    var columns = []
+
+    req.on('error', function (error) {
+      // handle any request errors
+    })
+
+    req.on('response', function (res) {
+      var stream = this // `this` is `req`, which is a stream
+
+      if (res.statusCode !== 200) {
+        this.emit('error', new Error('Bad status code'))
+      }
+      else {
+        stream.pipe(feedparser)
+      }
+    })
+
+    feedparser.on('error', function (error) {
+      // always handle errors
+    })
+
+    feedparser.on('meta', function (meta) {
+      console.log('===== %s =====', meta.title)
+    })
+
+    feedparser.on('readable', function () {
+      // This is where the action is!
+      var stream = this // `this` is `feedparser`, which is a stream
+      var meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance
+      var item
+
+      while (item = stream.read()) {
+        console.log('Got article: %s', item.title || item.description)
+
+        var description = item.description
+        var imgUrl = "https" + description.match(/:\/\/[^">]+/g)
+        // remove html tag
+        var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
+        // substring by length
+        if (clearDescription.length > DESCRIPTION_LENGTH) {
+          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3 ) + '...'
+        } else {
+          var trimDescription = clearDescription
+        }
+
+        var feedLink = item.link
+        feedLink = feedLink.replace(/^http:\/\//i, 'https://')
+        console.log('Got clearDescription: %s', trimDescription)
+
+        var carousel = {
+          "thumbnailImageUrl": imgUrl,
+          "title": item.title,
+          "text": trimDescription,
+          "actions": [
+            {
+              "type": "uri",
+              "label": "線上觀看",
+              "uri": feedLink
+            },
+            {
+              "type": "postback",
+              "label": "訂閱",
+              "data": "status=" + SUBSCRIBE + "&rssId=1"
+            }
+          ]
+        }
+        if (feedNumber > offset && feedNumber <= offset + limit) {
+          columns.push(carousel)
+        }
+
+        if (feedNumber === offset + limit) {
+          var obj = {
+            "type": "template",
+            "altText": "Engadget",
+            "template": {
+                "type": "carousel",
+                "columns": columns
+            }
+          }
+          // console.log('columns!!!!!', util.inspect(columns, false, null))
+          res.reply(obj)
+        }
+        feedNumber++
+      }
+    })
   }
 }
