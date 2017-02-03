@@ -21,10 +21,20 @@ CREATE TABLE IF NOT EXISTS Rss (
 	lastUpdateTimestamp timestamp with time zone
 );
 
+CREATE TABLE IF NOT EXISTS RssFeed (
+	id serial primary key,
+	rssFeedTitle text,
+	rssFeedUrl text,
+	releaseDate date,
+	thumbnail text,
+	createTimestamp timestamp with time zone
+);
+
 CREATE TABLE IF NOT EXISTS UserSubscription (
 	id serial primary key,
 	userId text,
 	rssId integer,
+	rssFeedId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
 	createTimestamp timestamp with time zone
 );
