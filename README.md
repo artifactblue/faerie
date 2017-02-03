@@ -19,21 +19,21 @@ behave as expected unless the [environment variables](#configuration) they rely
 upon have been set.
 
 You can start faerie locally by running:
-
+```shell
     % bin/hubot
-
+```
 You'll see some start up output and a prompt:
-
+```shell
     [Sat Feb 28 2015 12:38:27 GMT+0000 (GMT)] INFO Using default redis on localhost:6379
     faerie>
-
+```
 Then you can interact with faerie by typing `faerie help`.
-
+```shell
     faerie> faerie help
     faerie animate me <query> - The same thing as `image me`, except adds [snip]
     faerie help - Displays all of the help commands that faerie knows about.
     ...
-
+```
 ### Configuration
 
 A few scripts (including some installed by default) require environment
