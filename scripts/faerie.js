@@ -235,8 +235,12 @@ module.exports = function(robot){
     })
   })
 
+  /**
+   * get rss feeds
+   */
   robot.hear(/rss/i, function(res){
-    var rssUrl = 'http://feeds.feedburner.com/engadget/cstb'
+    // var rssUrl = 'http://feeds.feedburner.com/engadget/cstb'
+    var rssUrl = 'http://a305020.pixnet.net/blog/feed/rss'
     var limit = FEED_LIMIT
     var offset = 3
     getRssFeeds(res, rssUrl, limit, offset)
@@ -513,6 +517,7 @@ module.exports = function(robot){
           ]
         }
         if (feedNumber > offset && feedNumber <= offset + limit) {
+          // console.log('*************\n', util.inspect(item, false, null))
           columns.push(carousel)
         }
 
