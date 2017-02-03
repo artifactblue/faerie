@@ -44,12 +44,12 @@ section that explains which values it requires to be placed in which variable.
 When you have lots of scripts installed this process can be quite labour
 intensive. The following shell command can be used as a stop gap until an
 easier way to do this has been implemented.
-
+```shell
     grep -o 'hubot-[a-z0-9_-]\+' external-scripts.json | \
       xargs -n1 -I {} sh -c 'sed -n "/^# Configuration/,/^#$/ s/^/{} /p" \
           $(find node_modules/{}/ -name "*.coffee")' | \
         awk -F '#' '{ printf "%-25s %s\n", $1, $2 }'
-
+```
 How to set environment variables will be specific to your operating system.
 Rather than recreate the various methods and best practices in achieving this,
 it's suggested that you search for a dedicated guide focused on your OS.
@@ -72,12 +72,12 @@ writing it yourself, you can use existing plugins.
 Hubot is able to load plugins from third-party `npm` packages. This is the
 recommended way to add functionality to your hubot. You can get a list of
 available hubot plugins on [npmjs.com][npmjs] or by using `npm search`:
-
+```shell
     % npm search hubot-scripts panda
     NAME             DESCRIPTION                        AUTHOR DATE       VERSION KEYWORDS
     hubot-pandapanda a hubot script for panda responses =missu 2014-11-30 0.9.2   hubot hubot-scripts panda
     ...
-
+```
 
 To use a package, check the package's documentation, but in general it is:
 
@@ -127,9 +127,9 @@ If you are going to use the `hubot-redis-brain` package (strongly suggested),
 you will need to add the Redis to Go addon on Heroku which requires a verified
 account or you can create an account at [Redis to Go][redistogo] and manually
 set the `REDISTOGO_URL` variable.
-
+```shell
     % heroku config:add REDISTOGO_URL="..."
-
+```
 If you don't need any persistence feel free to remove the `hubot-redis-brain`
 from `external-scripts.json` and you don't need to worry about redis at all.
 
@@ -148,23 +148,23 @@ the adapter package as a dependency to the `package.json` file in the
 
 Once you've added the dependency with `npm install --save` to install it you
 can then run hubot with the adapter.
-
+```shell
     % bin/hubot -a <adapter>
-
+```
 Where `<adapter>` is the name of your adapter without the `hubot-` prefix.
 
 [hubot-adapters]: https://github.com/github/hubot/blob/master/docs/adapters.md
 
 ## Deployment
-
+```shell
     % heroku create --stack cedar
     % git push heroku master
-
+```
 If your Heroku account has been verified you can run the following to enable
 and add the Redis to Go addon to your app.
-
+```shell
     % heroku addons:add redistogo:nano
-
+```
 If you run into any problems, checkout Heroku's [docs][heroku-node-docs].
 
 You'll need to edit the `Procfile` to set the name of your hubot.
@@ -191,26 +191,27 @@ links to the adapters can be found on [Hubot Adapters][hubot-adapters].
 
 Create a separate Campfire user for your bot and get their token from the web
 UI.
-
+```shell
     % heroku config:add HUBOT_CAMPFIRE_TOKEN="..."
-
+```
 Get the numeric IDs of the rooms you want the bot to join, comma delimited. If
 you want the bot to connect to `https://mysubdomain.campfirenow.com/room/42`
 and `https://mysubdomain.campfirenow.com/room/1024` then you'd add it like
 this:
-
+```shell
     % heroku config:add HUBOT_CAMPFIRE_ROOMS="42,1024"
-
+```
 Add the subdomain hubot should connect to. If you web URL looks like
 `http://mysubdomain.campfirenow.com` then you'd add it like this:
-
+```shell
     % heroku config:add HUBOT_CAMPFIRE_ACCOUNT="mysubdomain"
-
+```
 [hubot-adapters]: https://github.com/github/hubot/blob/master/docs/adapters.md
 
 ## Open http 8080 for line dev account 
-ngrok http 8080
-
+```shell
+> ngrok http 8080
+```
 ## RSS reference
 - 資訊
     - http://feeds.feedburner.com/engadget/cstb (Engadget)
