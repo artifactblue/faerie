@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS UserSubscription (
 	id serial primary key,
 	userId text,
 	rssId integer,
-	rssFeedId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
 	createTimestamp timestamp with time zone
 );
