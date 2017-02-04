@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Rss (
 
 CREATE TABLE IF NOT EXISTS RssFeed (
 	id serial primary key,
+	rssId integer,
 	rssFeedTitle text,
 	rssFeedUrl text,
 	releaseDate date,
