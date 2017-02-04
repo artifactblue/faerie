@@ -13,7 +13,8 @@ UserSubscription.prototype.readByUserId = function(id, limit = 3) {
 }
 
 UserSubscription.prototype.create = function(entity) {
-	return pool.query('INSERT INTO userSubscription (UserId, RssId, Status, CreateTimestamp) '
+	// TODO add rssFeedId on this
+	return pool.query('INSERT INTO userSubscription (UserId, RssId, RssFeedId, Status, CreateTimestamp) '
 		+ ' SELECT $1, $2, $3, now() '
 		+ ' WHERE NOT EXISTS (SELECT 1 FROM userSubscription WHERE UserId = $4 AND RssId = $5 AND Status = $6)'
 		, 

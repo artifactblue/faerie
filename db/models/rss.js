@@ -16,11 +16,14 @@ Rss.prototype.readByCategoryId = function(categoryId, limit = 3, offset = 0) {
 }
 
 Rss.prototype.create = function(entity) {
-
+	return pool.query('INSERT INTO rss (CategoryId, RssName, RssUrl, Thumbnail, CreateTimestamp) '
+		+ ' VALUES ($1, $2, $3, $4, now())', 
+		[entity.categoryId, entity.rssName, entity.rssUrl, entity.thumbnail]);
 }
 
 Rss.prototype.update = function(entity) {
-
+	return pool.query('UPDATE rss SET lastUpdateTimestamp = now() WHERE rssId = $1', 
+		[entity.rssId]);
 }
 
 exports = module.exports = new Rss()
