@@ -382,7 +382,7 @@ module.exports = function (robot) {
       }
       console.log(actions.length)
       if (actions.length > 0) {
-        columns.push(carousel)
+        columns.push(moreCarousel)
       }
     }
     var obj = {
