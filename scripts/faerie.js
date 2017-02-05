@@ -355,28 +355,34 @@ module.exports = function (robot) {
     })
     if (readMore.page) {
       var actions = []
-      var prevOffset = parseInt(readMore.offset, 10) - 3
+      //var prevOffset = parseInt(readMore.offset, 10) - 3
       var nextOffset = parseInt(readMore.offset, 10) + 3
-      var prev = {
-        "type": "postback",
-        "label": "上一頁",
-        "data": "action=top&limit=" + readMore.limit + "&offset=" + prevOffset
+      // var prev = {
+      //   "type": "postback",
+      //   "label": "上一頁",
+      //   "data": "action=top&limit=" + readMore.limit + "&offset=" + prevOffset
+      // }
+      var uri = {
+        "type": "uri",
+        "label": "查看分類清單",
+        "uri": "https://i.imgur.com/dsECxwV.jpg"
       }
+      actions.push(uri);
       var next = {
         "type": "postback",
         "label": "下一頁",
         "data": "action=top&limit=" + readMore.limit + "&offset=" + nextOffset
       }
-      if (prevOffset > 0) {
-        actions.push(prev)
-      }
+      // if (prevOffset > 0) {
+      //   actions.push(prev)
+      // }
       if (nextOffset < readMore.total) {
         actions.push(next)
       }
 
       var moreCarousel = {
         "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
-        "title": "畫面上沒有你想要的分類嗎？沒關係，讓我們繼續看下去",
+        "title": "畫面上沒有你心儀的分類嗎？沒關係，讓我們繼續看下去",
         "text": "Read More...",
         "actions": actions
       }
