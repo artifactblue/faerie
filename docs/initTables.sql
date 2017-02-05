@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Category (
 	id serial primary key,
 	name text,
 	thumbnail text,
+	categoryUrl text,
 	createTimestamp timestamp with time zone
 );
 
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS RssFeed (
 CREATE TABLE IF NOT EXISTS UserSubscription (
 	id serial primary key,
 	userId text,
-	rssId integer,
+	categoryId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
 	createTimestamp timestamp with time zone
 );

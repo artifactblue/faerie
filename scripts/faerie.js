@@ -164,14 +164,14 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
-    if (entity.status) {
-      subscriptionRss(entity)
+    if (entity.status && entity.categoryId) {
+      subscriptionCategory(entity)
     }
-    if (entity.categoryId) {
-      // TODO show rss feed list
-      // console.log('#1 getRssLinks', res, entity)
-      getRssLinks(entity);
-    }
+    // if (entity.categoryId) {
+    //   // TODO show rss feed list
+    //   // console.log('#1 getRssLinks', res, entity)
+    //   getRssLinks(entity);
+    // }
   })
 
   /**
@@ -314,9 +314,14 @@ module.exports = function (robot) {
         "text": data.name,
         "actions": [
           {
+            "type": "uri",
+            "label": "瀏覽",
+            "uri": data.categoryUrl
+          }, {
             "type": "postback",
-            "label": "顯示[" + data.name + "]",
-            "data": "limit=3&offset=0&categoryId=" + data.id
+            "label": "訂閱[" + data.name + "]",
+            //"data": "limit=3&offset=0&categoryId=" + data.id
+            "data": "status=" + SUBSCRIBE + "&categoryId=" + data.id
           }
         ]
       }
@@ -386,6 +391,45 @@ module.exports = function (robot) {
       }
     }
     return obj
+  }
+
+  function subscriptionCategory(entity) {
+    console.log('subscriptionCategory: ', entity)
+    if (entity.status == SUBSCRIBE) {
+      userSubscription.create(entity).then(function (result) {
+        category.read(entity.categoryId).then(function (categoryResult) {
+          if (categoryResult.rowCount > 0) {
+            var categoryResultData = categoryResult.rows[0];
+            var message = [
+              {
+                "type": "text",
+                "text": "[" + categoryResultData.name + "] 訂閱完成"
+              }
+            ]
+            pushMessage(entity.userId, message)
+          }
+        })
+      }).catch(function (err) {
+        console.log(err)
+      })
+    } else if (entity.status = UNSUBSCRIBE) {
+      userSubscription.update(entity).then(function (result) {
+        category.read(entity.categoryId).then(function (categoryResult) {
+          if (categoryResult.rowCount > 0) {
+            var categoryResultData = categoryResult.rows[0];
+            var message = [
+              {
+                "type": "text",
+                "text": "[" + categoryResultData.name + "] 已取消訂閱"
+              }
+            ]
+            pushMessage(entity.userId, message)
+          }
+        })
+      }).catch(function (err) {
+        console.log(err)
+      })
+    }
   }
 
   /**
