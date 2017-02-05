@@ -19,99 +19,93 @@ var imgur = require('imgur')
 var Promise = require('bluebird')
 var util = require('util')
 
-// rss feed parser
+// RSS feed parser
 var FeedParser = require('feedparser')
 var request = require('request') // for fetching the feed
 
+// Gobal param
 var FEED_LIMIT = 3
 var DESCRIPTION_LENGTH = 60
 var sendImageString = ""
 
 var {
- SUBSCRIBE,
- UNSUBSCRIBE,
+  SUBSCRIBE,
+  UNSUBSCRIBE,
 } = userSubscription
 
 var carouselTemp = {
   "type": "template",
   "altText": "this is a carousel template",
   "template": {
-      "type": "carousel",
-      "columns": [
+    "type": "carousel",
+    "columns": [
+      {
+        "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
+        "title": "this is menu",
+        "text": "description",
+        "actions": [
           {
-            "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
-            "title": "this is menu",
-            "text": "description",
-            "actions": [
-                {
-                    "type": "postback",
-                    "label": "Buy",
-                    "data": "action=buy&itemid=111"
-                },
-                {
-                    "type": "postback",
-                    "label": "Add to cart",
-                    "data": "action=add&itemid=111"
-                },
-                {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/111"
-                }
-            ]
+            "type": "postback",
+            "label": "Buy",
+            "data": "action=buy&itemid=111"
           },
           {
-            "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
-            "title": "this is menu",
-            "text": "description",
-            "actions": [
-                {
-                    "type": "postback",
-                    "label": "Buy",
-                    "data": "action=buy&itemid=222"
-                },
-                {
-                    "type": "postback",
-                    "label": "Add to cart",
-                    "data": "action=add&itemid=222"
-                },
-                {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/222"
-                }
-            ]
+            "type": "postback",
+            "label": "Add to cart",
+            "data": "action=add&itemid=111"
+          },
+          {
+            "type": "uri",
+            "label": "View detail",
+            "uri": "http://example.com/page/111"
           }
-      ]
+        ]
+      },
+      {
+        "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
+        "title": "this is menu",
+        "text": "description",
+        "actions": [
+          {
+            "type": "postback",
+            "label": "Buy",
+            "data": "action=buy&itemid=222"
+          },
+          {
+            "type": "postback",
+            "label": "Add to cart",
+            "data": "action=add&itemid=222"
+          },
+          {
+            "type": "uri",
+            "label": "View detail",
+            "uri": "http://example.com/page/222"
+          }
+        ]
+      }
+    ]
   }
 }
 
-function uploadImages (res, respBody) {
-  console.log('uploadImages---1')
-  for(var index in respBody){
+function uploadImages(res, respBody) {
+  for (var index in respBody) {
     var imgUrl = respBody[index].images
-    if(index >= 0 && index <= 4)
-    imgur.uploadUrl(imgUrl)
+    if (index >= 0 && index <= 4)
+      imgur.uploadUrl(imgUrl)
         .then(function (json) {
-            var imgurUrl = json.data.link
-            imgurUrl = imgurUrl.replace(/^http:\/\//i, 'https://')
-            // image.push(new SendImage(imgurUrl, imgurUrl))
-            // sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')"
-            res.reply(new SendImage(imgurUrl, imgurUrl))
-            console.log("?????", imgurUrl)
+          var imgurUrl = json.data.link
+          imgurUrl = imgurUrl.replace(/^http:\/\//i, 'https://')
+          // image.push(new SendImage(imgurUrl, imgurUrl))
+          // sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')"
+          res.reply(new SendImage(imgurUrl, imgurUrl))
         })
         .catch(function (err) {
-            console.error(err.message)
+          console.error(err.message)
         })
   }
 }
 
-function pushImageByLine (res) {
-  console.log('pushImageByLine---2')
-  // eval("res.reply(sendImageString)")
-}
-
-module.exports = function(robot){
+module.exports = function (robot) {
   var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
   /**
    * Image URL (Max: 1000 characters)
@@ -124,11 +118,11 @@ module.exports = function(robot){
 
   /**
    * Filter all sticker message
-   */ 
-  var filterStickers = function(message){
+   */
+  var filterStickers = function (message) {
     var result = false
     var stickerMsg = message.message
-    if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker'){
+    if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker') {
       result = true
     }
     var user = message.user
@@ -138,18 +132,18 @@ module.exports = function(robot){
 
   /**
    * Filter all postback message
-   */ 
-  var filterPostback = function(message){
+   */
+  var filterPostback = function (message) {
     var result = false
     var postbackMsg = message.message
-    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback'){
+    if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback') {
       result = true
       robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
         .header('Authorization', "Bearer " + LINE_TOKEN)
-        .get()(function(err, resp, body) {
+        .get()(function (err, resp, body) {
           var respBody = JSON.parse(body)
-          var entity = {id: respBody.userId, displayName: respBody.displayName}
-          users.create(entity).then(function(result){
+          var entity = { id: respBody.userId, displayName: respBody.displayName }
+          users.create(entity).then(function (result) {
             console.log(respBody.userId + ' updated')
           })
         })
@@ -160,19 +154,19 @@ module.exports = function(robot){
   /**
    * Do postback action
    */
-  robot.listen(filterPostback, function(res){
+  robot.listen(filterPostback, function (res) {
     var postbackMsg = res.message.message.postback
     console.log(res.message.user.id + ", " + postbackMsg.data)
     var postbackData = postbackMsg.data.split('&')
-    var entity = {userId: res.message.user.id}
-    postbackData.forEach(function(param){
+    var entity = { userId: res.message.user.id }
+    postbackData.forEach(function (param) {
       var data = param.split('=')
       entity[data[0]] = data[1]
     })
 
     if (entity.status) {
       subscriptionRss(entity)
-    } 
+    }
     if (entity.categoryId) {
       // TODO show rss feed list
       // console.log('#1 getRssLinks', res, entity)
@@ -183,7 +177,7 @@ module.exports = function(robot){
   /**
    * Reply any sticker message
    */
-  robot.listen(filterStickers, function(res){
+  robot.listen(filterStickers, function (res) {
     var stickerMessage = res.message.message
     // This line is necessary to prevent error
     res.envelope.message = stickerMessage
@@ -194,10 +188,10 @@ module.exports = function(robot){
   /**
    * Get user profile
    */
-  robot.hear(/whoami/i, function(res){
+  robot.hear(/whoami/i, function (res) {
     robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
       .header('Authorization', "Bearer " + LINE_TOKEN)
-      .get()(function(err, resp, body) {
+      .get()(function (err, resp, body) {
         var respBody = JSON.parse(body)
         var text1 = new SendText('你好，' + respBody.displayName)
         var text2 = new SendText('使用者ID ' + res.message.user.id)
@@ -208,7 +202,7 @@ module.exports = function(robot){
   /**
    * Support on this bot
    */
-  robot.hear(/help/i, function(res){
+  robot.hear(/help/i, function (res) {
     var text1 = new SendText('輸入 [top]，顯示 Top 3 推薦類別')
     var text2 = new SendText('輸入 [list]，顯示訂閱清單')
     var text3 = new SendText('輸入 [whoami]，顯示個人資訊')
@@ -218,8 +212,8 @@ module.exports = function(robot){
   /**  
    * Get Top 3 rss
    */
-  robot.hear(/top/i, function(res){
-    var categoryList = category.readAll().then(function(result){
+  robot.hear(/top/i, function (res) {
+    var categoryList = category.readAll().then(function (result) {
       var msg = buildCarousel("category recommend", result)
       res.reply(msg)
     })
@@ -228,8 +222,8 @@ module.exports = function(robot){
   /**
    * List all rss subscription
    */
-  robot.hear(/list/i, function(res){
-    userSubscription.readByUserId(res.message.user.id).then(function(result){
+  robot.hear(/list/i, function (res) {
+    userSubscription.readByUserId(res.message.user.id).then(function (result) {
       var msg = buildButton("subscription list", result)
       res.reply(msg)
     })
@@ -238,7 +232,7 @@ module.exports = function(robot){
   /**
    * get rss feeds
    */
-  robot.hear(/rss/i, function(res){
+  robot.hear(/rss/i, function (res) {
     // var rssUrl = 'http://feeds.feedburner.com/engadget/cstb'
     var rssUrl = 'http://a305020.pixnet.net/blog/feed/rss'
     var limit = FEED_LIMIT
@@ -246,32 +240,32 @@ module.exports = function(robot){
     getRssFeeds(res, rssUrl, limit, offset)
   })
 
-  robot.hear(/a/i, function(res) {
+  robot.hear(/a/i, function (res) {
     var btntemp = {
       "type": "template",
       "altText": "this is a buttons template",
       "template": {
-          "type": "buttons",
-          "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
-          "title": "Menu",
-          "text": "Please select",
-          "actions": [
-              {
-                "type": "postback",
-                "label": "Buy",
-                "data": "action=buy&itemid=123"
-              },
-              {
-                "type": "postback",
-                "label": "Add to cart",
-                "data": "action=add&itemid=123"
-              },
-              {
-                "type": "uri",
-                "label": "View detail",
-                "uri": "http://example.com/page/123"
-              }
-          ]
+        "type": "buttons",
+        "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
+        "title": "Menu",
+        "text": "Please select",
+        "actions": [
+          {
+            "type": "postback",
+            "label": "Buy",
+            "data": "action=buy&itemid=123"
+          },
+          {
+            "type": "postback",
+            "label": "Add to cart",
+            "data": "action=add&itemid=123"
+          },
+          {
+            "type": "uri",
+            "label": "View detail",
+            "uri": "http://example.com/page/123"
+          }
+        ]
       }
     }
 
@@ -281,7 +275,7 @@ module.exports = function(robot){
   /**
    * push notification
    */
-  robot.hear(/push/i, function(res){
+  robot.hear(/push/i, function (res) {
     var message = [
       {
         "type": "text",
@@ -303,7 +297,7 @@ module.exports = function(robot){
     robot.http("https://api.line.me/v2/bot/message/push")
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .header('Content-Type', 'application/json')
-      .post(postData)(function(err, resp, body) {
+      .post(postData)(function (err, resp, body) {
         console.log(err, resp, body)
       })
   }
@@ -313,7 +307,7 @@ module.exports = function(robot){
    */
   function buildCarousel(altText, result) {
     var columns = []
-    result.rows.forEach(function(data){
+    result.rows.forEach(function (data) {
       var carousel = {
         "thumbnailImageUrl": data.thumbnail,
         "title": data.name,
@@ -332,17 +326,17 @@ module.exports = function(robot){
       "type": "template",
       "altText": altText,
       "template": {
-          "type": "carousel",
-          "columns": columns
+        "type": "carousel",
+        "columns": columns
       }
     }
     return obj
   }
 
-  function buildCarouselByCategory (altText, result) {
+  function buildCarouselByCategory(altText, result) {
     // console.log('#2', altText, result)
     var columns = []
-    result.rows.forEach(function(data){
+    result.rows.forEach(function (data) {
       var carousel = {
         // "thumbnailImageUrl": data.thumbnail,
         "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
@@ -362,8 +356,8 @@ module.exports = function(robot){
       "type": "template",
       "altText": altText,
       "template": {
-          "type": "carousel",
-          "columns": columns
+        "type": "carousel",
+        "columns": columns
       }
     }
     // console.log('#3', util.inspect(obj, false, null))
@@ -372,7 +366,7 @@ module.exports = function(robot){
 
   function buildButton(altText, result) {
     var actions = []
-    result.rows.forEach(function(data){
+    result.rows.forEach(function (data) {
       var action = {
         "type": "postback",
         "label": "取消訂閱[" + data.rssname + "]",
@@ -384,11 +378,11 @@ module.exports = function(robot){
       "type": "template",
       "altText": altText,
       "template": {
-          "type": "buttons",
-          "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
-          "title": "訂閱清單",
-          "text": "點選取消訂閱",
-          "actions": actions
+        "type": "buttons",
+        "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
+        "title": "訂閱清單",
+        "text": "點選取消訂閱",
+        "actions": actions
       }
     }
     return obj
@@ -400,8 +394,8 @@ module.exports = function(robot){
   function subscriptionRss(entity) {
     console.log('subscriptionRss: ', entity)
     if (entity.status == SUBSCRIBE) {
-      userSubscription.create(entity).then(function(result){
-        rss.read(entity.rssId).then(function(rssResult){
+      userSubscription.create(entity).then(function (result) {
+        rss.read(entity.rssId).then(function (rssResult) {
           if (rssResult.rowCount > 0) {
             var rssResultData = rssResult.rows[0];
             var message = [
@@ -413,12 +407,12 @@ module.exports = function(robot){
             pushMessage(entity.userId, message)
           }
         })
-      }).catch(function(err){
+      }).catch(function (err) {
         console.log(err)
       })
     } else if (entity.status = UNSUBSCRIBE) {
-      userSubscription.update(entity).then(function(result){
-        rss.read(entity.rssId).then(function(rssResult){
+      userSubscription.update(entity).then(function (result) {
+        rss.read(entity.rssId).then(function (rssResult) {
           if (rssResult.rowCount > 0) {
             var rssResultData = rssResult.rows[0];
             var message = [
@@ -430,14 +424,14 @@ module.exports = function(robot){
             pushMessage(entity.userId, message)
           }
         })
-      }).catch(function(err){
+      }).catch(function (err) {
         console.log(err)
       })
     }
   }
 
-  function getRssLinks (entity) {
-    rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function(result){
+  function getRssLinks(entity) {
+    rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function (result) {
       var message = [
         buildCarouselByCategory("rss list", result)
       ]
@@ -445,7 +439,7 @@ module.exports = function(robot){
     })
   }
 
-  function getRssFeeds (res, rssUrl, limit, offset) {
+  function getRssFeeds(res, rssUrl, limit, offset) {
     // request rss link
     var req = request(rssUrl)
     var feedparser = new FeedParser()
@@ -490,7 +484,7 @@ module.exports = function(robot){
         var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
         // substring by length
         if (clearDescription.length > DESCRIPTION_LENGTH) {
-          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3 ) + '...'
+          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3) + '...'
         } else {
           var trimDescription = clearDescription
         }
@@ -526,8 +520,8 @@ module.exports = function(robot){
             "type": "template",
             "altText": "Engadget",
             "template": {
-                "type": "carousel",
-                "columns": columns
+              "type": "carousel",
+              "columns": columns
             }
           }
           // console.log('columns!!!!!', util.inspect(columns, false, null))
