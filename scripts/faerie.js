@@ -364,7 +364,7 @@ module.exports = function (robot) {
       // }
       var uri = {
         "type": "uri",
-        "label": "查看分類清單",
+        "label": "查看完整分類清單",
         "uri": "https://i.imgur.com/dsECxwV.jpg"
       }
       actions.push(uri);
@@ -378,6 +378,13 @@ module.exports = function (robot) {
       // }
       if (nextOffset < readMore.total) {
         actions.push(next)
+      } else {
+        var final = {
+          "type": "postback",
+          "label": "這是最後一頁了，讓我們重頭開始吧",
+          "data": "action=top&limit=" + readMore.limit + "&offset=0"
+        }
+        actions.push(final);
       }
 
       var moreCarousel = {
