@@ -12,11 +12,15 @@ UserSubscription.prototype.readByUserId = function(id, limit = 3) {
     	[UserSubscription.prototype.SUBSCRIBE, id, limit])
 }
 
+UserSubscription.prototype.check = function(entity) {
+	return pool.query('SELECT * FROM userSubscription WHERE userId = $1 AND categoryId = $2 AND status = $3',
+		[entity.userId, entity.categoryId, entity.status]);
+}
+
 UserSubscription.prototype.create = function(entity) {
 	return pool.query('INSERT INTO userSubscription (UserId, CategoryId, Status, CreateTimestamp) '
 		+ ' SELECT $1, $2, $3, now() '
-		+ ' WHERE NOT EXISTS (SELECT 1 FROM userSubscription WHERE UserId = $4 AND CategoryId = $5 AND Status = $6)'
-		, 
+		+ ' WHERE NOT EXISTS (SELECT 1 FROM userSubscription WHERE UserId = $4 AND CategoryId = $5 AND Status = $6)', 
 		[entity.userId, entity.categoryId, entity.status, entity.userId, entity.categoryId, entity.status])
 }
 
