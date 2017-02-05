@@ -164,14 +164,14 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
-    if (entity.status) {
-      subscriptionRss(entity)
+    if (entity.status && entity.categoryId) {
+      subscriptionCategory(entity)
     }
-    if (entity.categoryId) {
-      // TODO show rss feed list
-      // console.log('#1 getRssLinks', res, entity)
-      getRssLinks(entity);
-    }
+    // if (entity.categoryId) {
+    //   // TODO show rss feed list
+    //   // console.log('#1 getRssLinks', res, entity)
+    //   getRssLinks(entity);
+    // }
   })
 
   /**
