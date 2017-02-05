@@ -323,7 +323,9 @@ module.exports = function (robot) {
           "limit": entity.limit,
           "total": categoryResult.rows[0].total
         }
-        var msg = buildCarousel("category recommend", result, readMore)
+        var msg = [
+          buildCarousel("category recommend", result, readMore)
+        ]
         pushMessage(entity.userId, msg)
       })
     })
