@@ -164,6 +164,7 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
+    console.log('entity: ', entity)
     if (entity.action === 'subscription' && entity.categoryId) {
       subscriptionCategory(entity)
     }
@@ -379,7 +380,10 @@ module.exports = function (robot) {
         "text": data.name,
         "actions": actions
       }
-      columns.push(carousel)
+      console.log(actions.length)
+      if (actions.length > 0) {
+        columns.push(carousel)
+      }
     }
     var obj = {
       "type": "template",
