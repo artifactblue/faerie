@@ -471,39 +471,62 @@ module.exports = function (robot) {
   function subscriptionCategory(entity) {
     console.log('subscriptionCategory: ', entity)
     if (entity.status === SUBSCRIBE) {
-      userSubscription.create(entity).then(function (result) {
-        category.read(entity.categoryId).then(function (categoryResult) {
-          if (categoryResult.rowCount > 0) {
-            var categoryResultData = categoryResult.rows[0];
-            var message = [
-              {
-                "type": "text",
-                "text": "[" + categoryResultData.name + "] 訂閱完成"
+      userSubscription.check(entity).then(function(checkResult) {
+        if (checkResult.rowCount > 0) {
+          var message = [
+            {
+              "type": "text",
+              "text": "您已經訂閱過此分類"
+            }
+          ]
+          pushMessage(entity.userId, message)
+        } else {
+          userSubscription.create(entity).then(function (result) {
+            category.read(entity.categoryId).then(function (categoryResult) {
+              if (categoryResult.rowCount > 0) {
+                var categoryResultData = categoryResult.rows[0];
+                var message = [
+                  {
+                    "type": "text",
+                    "text": "[" + categoryResultData.name + "] 訂閱完成"
+                  }
+                ]
+                pushMessage(entity.userId, message)
               }
-            ]
-            pushMessage(entity.userId, message)
-          }
-        })
-      }).catch(function (err) {
-        console.log(err)
+            })
+          }).catch(function (err) {
+            console.log(err)
+          })
+        }
       })
     } else if (entity.status = UNSUBSCRIBE) {
-      userSubscription.update(entity).then(function (result) {
-        category.read(entity.categoryId).then(function (categoryResult) {
-          if (categoryResult.rowCount > 0) {
-            var categoryResultData = categoryResult.rows[0];
-            var message = [
-              {
-                "type": "text",
-                "text": "[" + categoryResultData.name + "] 已取消訂閱"
+      userSubscription.check(entity).then(function(checkResult) {
+        if (checkResult.rowCount > 0) {
+          var message = [
+            {
+              "type": "text",
+              "text": "您尚未訂閱此分類"
+            }
+          ]
+          pushMessage(entity.userId, message)
+        } else {
+          userSubscription.update(entity).then(function (result) {
+            category.read(entity.categoryId).then(function (categoryResult) {
+              if (categoryResult.rowCount > 0) {
+                var categoryResultData = categoryResult.rows[0];
+                var message = [
+                  {
+                    "type": "text",
+                    "text": "[" + categoryResultData.name + "] 已取消訂閱"
+                  }
+                ]
+                pushMessage(entity.userId, message)
               }
-            ]
-            pushMessage(entity.userId, message)
-          }
-        })
-      }).catch(function (err) {
-        console.log(err)
-      })
+            })
+          }).catch(function (err) {
+            console.log(err)
+          })
+        }
     }
   }
 
