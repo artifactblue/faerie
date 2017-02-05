@@ -25,4 +25,15 @@ UserSubscription.prototype.update = function(entity) {
 		[entity.status, entity.userId, entity.categoryId])
 }
 
+UserSubscription.prototype.loadUnpushedCategory = function(entity) {
+	return pool.query('SELECT userSubscription.* FROM userSubscription '
+		+ ' LEFT JOIN rss ON userSubscription.categoryId = rss.categoryId '
+		+ ' WHERE userSubscription.lastUpdateTimestamp < rss.lastUpdateTimestamp')
+}
+
+UserSubscription.prototype.updatePushedCategory = function(entity) {
+	return pool.query('UPDATE userSubscription SET lastUpdateTimestamp = now() WHERE userId = $1 AND categoryId = $2',
+		[entity.userId, entity.categoryId])
+}
+
 exports = module.exports = new UserSubscription()

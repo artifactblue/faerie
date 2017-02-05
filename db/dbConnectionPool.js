@@ -12,11 +12,11 @@ var IDLE_TIMEOUT_MILLIS = 30000
 // note: all config is optional and the environment variables
 // will be read if the config is not present
 var config = {
-    user: process.env.PGUSER, //env var: PGUSER
-    database: process.env.PGDATABASE, //env var: PGDATABASE
-    password: process.env.PGPASSWORD, //env var: PGPASSWORD
-    host: process.env.PGHOST, // Server hosting the postgres database
-    port: process.env.PGPORT, //env var: PGPORT
+    user: process.env.AWS_RDS_USER, //env var: PGUSER
+    database: process.env.AWS_RDS_DATABASE, //env var: PGDATABASE
+    password: process.env.AWS_RDS_PASSWORD, //env var: PGPASSWORD
+    host: process.env.AWS_RDS_HOST, // Server hosting the postgres database
+    port: process.env.AWS_RDS_PORT, //env var: PGPORT
     max: MAX, // max number of clients in the pool
     idleTimeoutMillis: IDLE_TIMEOUT_MILLIS // how long a client is allowed to remain idle before being closed
 }
