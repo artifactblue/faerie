@@ -315,7 +315,7 @@ module.exports = function (robot) {
         "actions": [
           {
             "type": "uri",
-            "label": "瀏覽",
+            "label": "瀏覽[" + data.name + "]",
             "uri": data.categoryUrl
           }, {
             "type": "postback",
@@ -335,6 +335,7 @@ module.exports = function (robot) {
         "columns": columns
       }
     }
+    console.log(util.inspect(obj, false, null));
     return obj
   }
 
@@ -435,44 +436,44 @@ module.exports = function (robot) {
   /**
    * Do subscribe
    */
-  function subscriptionRss(entity) {
-    console.log('subscriptionRss: ', entity)
-    if (entity.status == SUBSCRIBE) {
-      userSubscription.create(entity).then(function (result) {
-        rss.read(entity.rssId).then(function (rssResult) {
-          if (rssResult.rowCount > 0) {
-            var rssResultData = rssResult.rows[0];
-            var message = [
-              {
-                "type": "text",
-                "text": "[" + rssResultData.rssname + "] 訂閱完成"
-              }
-            ]
-            pushMessage(entity.userId, message)
-          }
-        })
-      }).catch(function (err) {
-        console.log(err)
-      })
-    } else if (entity.status = UNSUBSCRIBE) {
-      userSubscription.update(entity).then(function (result) {
-        rss.read(entity.rssId).then(function (rssResult) {
-          if (rssResult.rowCount > 0) {
-            var rssResultData = rssResult.rows[0];
-            var message = [
-              {
-                "type": "text",
-                "text": "[" + rssResultData.rssname + "] 已取消訂閱"
-              }
-            ]
-            pushMessage(entity.userId, message)
-          }
-        })
-      }).catch(function (err) {
-        console.log(err)
-      })
-    }
-  }
+  // function subscriptionRss(entity) {
+  //   console.log('subscriptionRss: ', entity)
+  //   if (entity.status == SUBSCRIBE) {
+  //     userSubscription.create(entity).then(function (result) {
+  //       rss.read(entity.rssId).then(function (rssResult) {
+  //         if (rssResult.rowCount > 0) {
+  //           var rssResultData = rssResult.rows[0];
+  //           var message = [
+  //             {
+  //               "type": "text",
+  //               "text": "[" + rssResultData.rssname + "] 訂閱完成"
+  //             }
+  //           ]
+  //           pushMessage(entity.userId, message)
+  //         }
+  //       })
+  //     }).catch(function (err) {
+  //       console.log(err)
+  //     })
+  //   } else if (entity.status = UNSUBSCRIBE) {
+  //     userSubscription.update(entity).then(function (result) {
+  //       rss.read(entity.rssId).then(function (rssResult) {
+  //         if (rssResult.rowCount > 0) {
+  //           var rssResultData = rssResult.rows[0];
+  //           var message = [
+  //             {
+  //               "type": "text",
+  //               "text": "[" + rssResultData.rssname + "] 已取消訂閱"
+  //             }
+  //           ]
+  //           pushMessage(entity.userId, message)
+  //         }
+  //       })
+  //     }).catch(function (err) {
+  //       console.log(err)
+  //     })
+  //   }
+  // }
 
   function getRssLinks(entity) {
     rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function (result) {
