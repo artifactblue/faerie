@@ -375,7 +375,7 @@ module.exports = function (robot) {
     result.rows.forEach(function (data) {
       var action = {
         "type": "postback",
-        "label": "取消訂閱[" + data.rssname + "]",
+        "label": "取消訂閱[" + data.name + "]",
         "data": "status=" + UNSUBSCRIBE + "&rssId=" + data.id
       }
       actions.push(action)
