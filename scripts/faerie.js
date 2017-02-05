@@ -527,6 +527,7 @@ module.exports = function (robot) {
             console.log(err)
           })
         }
+      })
     }
   }
 
