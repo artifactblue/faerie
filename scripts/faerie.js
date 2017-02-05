@@ -375,9 +375,9 @@ module.exports = function (robot) {
       }
 
       var moreCarousel = {
-        "thumbnailImageUrl": data.thumbnail,
-        "title": data.name,
-        "text": data.name,
+        "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
+        "title": "畫面上沒有你想要的分類嗎？沒關係，讓我們繼續看下去",
+        "text": "Read More...",
         "actions": actions
       }
       console.log(actions.length)
