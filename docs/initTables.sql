@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS UserSubscription (
 	userId text,
 	categoryId integer,
 	status text, -- SUBSCRIBE, UNSUBSCRIBE, PENDING
-	createTimestamp timestamp with time zone
+	createTimestamp timestamp with time zone,
+	lastUpdateTimestamp timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS RssView (

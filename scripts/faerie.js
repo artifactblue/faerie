@@ -383,7 +383,7 @@ module.exports = function (robot) {
       } else {
         var final = {
           "type": "postback",
-          "label": "這是最後一頁了，讓我們重頭開始吧",
+          "label": "下面沒有了，重頭開始？",
           "data": "action=top&limit=" + readMore.limit + "&offset=0"
         }
         actions.push(final)
