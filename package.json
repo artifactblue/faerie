@@ -5,6 +5,7 @@
   "author": "Phyrex Tsai <x01ep23i@hotmail.com>",
   "description": "faerie can do everything for you",
   "dependencies": {
+    "aws-sdk": "2.7.25",
     "bluebird": "^3.4.7",
     "feedparser": "^2.1.0",
     "hubot": "2.19.0",

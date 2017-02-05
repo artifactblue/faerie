@@ -218,6 +218,7 @@ module.exports = function (robot) {
    */
   robot.hear(/top/i, function (res) {
     var categoryList = category.readAll().then(function (result) {
+      console.log('top rowCount: ', result.rowCount)
       category.all().then(function(categoryResult) {
         var readMore = {
           "page": true,
