@@ -164,10 +164,10 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
-    if (entity.action == 'subscription' && entity.categoryId) {
+    if (entity.action === 'subscription' && entity.categoryId) {
       subscriptionCategory(entity)
     }
-    if (entity.action == 'top') {
+    if (entity.action === 'top') {
       categoryPage(entity);
     }
     // if (entity.categoryId) {
@@ -450,7 +450,7 @@ module.exports = function (robot) {
 
   function subscriptionCategory(entity) {
     console.log('subscriptionCategory: ', entity)
-    if (entity.status == SUBSCRIBE) {
+    if (entity.status === SUBSCRIBE) {
       userSubscription.create(entity).then(function (result) {
         category.read(entity.categoryId).then(function (categoryResult) {
           if (categoryResult.rowCount > 0) {
