@@ -164,8 +164,11 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
-    if (entity.status && entity.categoryId) {
+    if (entity.action == 'subscription' && entity.categoryId) {
       subscriptionCategory(entity)
+    }
+    if (entity.action == 'top') {
+      categoryPage(entity);
     }
     // if (entity.categoryId) {
     //   // TODO show rss feed list
@@ -214,8 +217,16 @@ module.exports = function (robot) {
    */
   robot.hear(/top/i, function (res) {
     var categoryList = category.readAll().then(function (result) {
-      var msg = buildCarousel("category recommend", result)
-      res.reply(msg)
+      category.all().then(function(categoryResult) {
+        var readMore = {
+          "page": true,
+          "offset": 0,
+          "limit": 3,
+          "total": categoryResult.rows[0].total
+        }
+        var msg = buildCarousel("category recommend", result, readMore)
+        res.reply(msg)
+      })
     })
   })
 
@@ -302,10 +313,25 @@ module.exports = function (robot) {
       })
   }
 
+  function categoryPage(entity) {
+    var categoryList = category.readAll(entity.limit, entity.offset).then(function (result) {
+      category.all().then(function(categoryResult) {
+        var readMore = {
+          "page": true,
+          "offset": entity.offset,
+          "limit": entity.limit,
+          "total": categoryResult.rows[0].total
+        }
+        var msg = buildCarousel("category recommend", result, readMore)
+        pushMessage(entity.userId, msg)
+      })
+    })
+  }
+
   /**
    * Build rss carousel
    */
-  function buildCarousel(altText, result) {
+  function buildCarousel(altText, result, readMore) {
     var columns = []
     result.rows.forEach(function (data) {
       var carousel = {
@@ -320,13 +346,41 @@ module.exports = function (robot) {
           }, {
             "type": "postback",
             "label": "訂閱[" + data.name + "]",
-            //"data": "limit=3&offset=0&categoryId=" + data.id
-            "data": "status=" + SUBSCRIBE + "&categoryId=" + data.id
+            "data": "action=subscription&status=" + SUBSCRIBE + "&categoryId=" + data.id
           }
         ]
       }
       columns.push(carousel)
     })
+    if (readMore.page) {
+      var actions = []
+      var prevOffset = parseInt(readMore.offset, 10) - 3
+      var nextOffset = parseInt(readMore.offset, 10) + 3
+      var prev = {
+        "type": "postback",
+        "label": "上一頁",
+        "data": "action=top&limit=" + readMore.limit + "&offset=" + prevOffset
+      }
+      var next = {
+        "type": "postback",
+        "label": "下一頁",
+        "data": "action=top&limit=" + readMore.limit + "&offset=" + nextOffset
+      }
+      if (prevOffset > 0) {
+        actions.push(prev)
+      }
+      if (nextOffset < readMore.total) {
+        actions.push(next)
+      }
+
+      var moreCarousel = {
+        "thumbnailImageUrl": data.thumbnail,
+        "title": data.name,
+        "text": data.name,
+        "actions": actions
+      }
+      columns.push(carousel)
+    }
     var obj = {
       "type": "template",
       "altText": altText,
@@ -376,7 +430,7 @@ module.exports = function (robot) {
       var action = {
         "type": "postback",
         "label": "取消訂閱[" + data.name + "]",
-        "data": "status=" + UNSUBSCRIBE + "&rssId=" + data.id
+        "data": "action=subscription&status=" + UNSUBSCRIBE + "&categoryId=" + data.id
       }
       actions.push(action)
     })

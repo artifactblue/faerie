@@ -2,6 +2,10 @@ var pool = require('../dbConnectionPool.js')
 
 function Category() {}
 
+Category.prototype.all = function() {
+	return pool.query('SELECT count(1) AS total FROM category')
+}
+
 Category.prototype.read = function(id) {
     return pool.query('SELECT * FROM category WHERE id = $1', [id])
 }
