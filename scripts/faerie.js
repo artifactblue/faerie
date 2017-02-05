@@ -384,7 +384,7 @@ module.exports = function (robot) {
           "label": "這是最後一頁了，讓我們重頭開始吧",
           "data": "action=top&limit=" + readMore.limit + "&offset=0"
         }
-        actions.push(final);
+        actions.push(final)
       }
 
       var moreCarousel = {
@@ -394,7 +394,7 @@ module.exports = function (robot) {
         "actions": actions
       }
       console.log(actions.length)
-      if (actions.length > 0) {
+      if (actions.length == 2) {
         columns.push(moreCarousel)
       }
     }
