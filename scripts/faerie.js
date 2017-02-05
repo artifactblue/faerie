@@ -316,7 +316,7 @@ module.exports = function (robot) {
           {
             "type": "uri",
             "label": "瀏覽[" + data.name + "]",
-            "uri": data.categoryUrl
+            "uri": data.categoryurl
           }, {
             "type": "postback",
             "label": "訂閱[" + data.name + "]",
