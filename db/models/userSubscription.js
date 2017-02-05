@@ -8,7 +8,7 @@ UserSubscription.prototype.UNSUBSCRIBE = 'UNSUBSCRIBE'
 
 UserSubscription.prototype.readByUserId = function(id, limit = 3) {
     return pool.query('SELECT * FROM userSubscription'
-    	+ ' LEFT JOIN category ON userSubscription.categoryId = category.id WHERE status = $1 AND userId = $2 ORDER BY id LIMIT $3', 
+    	+ ' LEFT JOIN category ON userSubscription.categoryId = category.id WHERE userSubscription.status = $1 AND userSubscription.userId = $2 ORDER BY userSubscription.id LIMIT $3', 
     	[UserSubscription.prototype.SUBSCRIBE, id, limit])
 }
 
