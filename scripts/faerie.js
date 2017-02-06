@@ -33,78 +33,6 @@ var {
   UNSUBSCRIBE,
 } = userSubscription
 
-var carouselTemp = {
-  "type": "template",
-  "altText": "this is a carousel template",
-  "template": {
-    "type": "carousel",
-    "columns": [
-      {
-        "thumbnailImageUrl": "https://example.com/bot/images/item1.jpg",
-        "title": "this is menu",
-        "text": "description",
-        "actions": [
-          {
-            "type": "postback",
-            "label": "Buy",
-            "data": "action=buy&itemid=111"
-          },
-          {
-            "type": "postback",
-            "label": "Add to cart",
-            "data": "action=add&itemid=111"
-          },
-          {
-            "type": "uri",
-            "label": "View detail",
-            "uri": "http://example.com/page/111"
-          }
-        ]
-      },
-      {
-        "thumbnailImageUrl": "https://example.com/bot/images/item2.jpg",
-        "title": "this is menu",
-        "text": "description",
-        "actions": [
-          {
-            "type": "postback",
-            "label": "Buy",
-            "data": "action=buy&itemid=222"
-          },
-          {
-            "type": "postback",
-            "label": "Add to cart",
-            "data": "action=add&itemid=222"
-          },
-          {
-            "type": "uri",
-            "label": "View detail",
-            "uri": "http://example.com/page/222"
-          }
-        ]
-      }
-    ]
-  }
-}
-
-function uploadImages(res, respBody) {
-  for (var index in respBody) {
-    var imgUrl = respBody[index].images
-    if (index >= 0 && index <= 4)
-      imgur.uploadUrl(imgUrl)
-        .then(function (json) {
-          var imgurUrl = json.data.link
-          imgurUrl = imgurUrl.replace(/^http:\/\//i, 'https://')
-          // image.push(new SendImage(imgurUrl, imgurUrl))
-          // sendImageString = sendImageString + ", new SendImage('" + imgurUrl + "', '" + imgurUrl + "')"
-          res.reply(new SendImage(imgurUrl, imgurUrl))
-        })
-        .catch(function (err) {
-          console.error(err.message)
-        })
-  }
-}
-
 module.exports = function (robot) {
   var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
   /**
@@ -116,6 +44,8 @@ module.exports = function (robot) {
    * Max: 1 MB
    */
 
+
+
   /**
    * Filter all sticker message
    */
@@ -125,8 +55,6 @@ module.exports = function (robot) {
     if (stickerMsg && stickerMsg.type && stickerMsg.type === 'sticker') {
       result = true
     }
-    var user = message.user
-    //robot.brain.set('USER:' + user.id, user)
     return result
   }
 
@@ -136,17 +64,9 @@ module.exports = function (robot) {
   var filterPostback = function (message) {
     var result = false
     var postbackMsg = message.message
+    saveUser(postbackMsg.user.id)
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback') {
       result = true
-      robot.http("https://api.line.me/v2/bot/profile/" + postbackMsg.user.id)
-        .header('Authorization', "Bearer " + LINE_TOKEN)
-        .get()(function (err, resp, body) {
-          var respBody = JSON.parse(body)
-          var entity = { id: respBody.userId, displayName: respBody.displayName }
-          users.create(entity).then(function (result) {
-            console.log(respBody.userId + ' updated')
-          })
-        })
     }
     return result
   }
@@ -164,12 +84,11 @@ module.exports = function (robot) {
       entity[data[0]] = data[1]
     })
 
-    console.log('entity: ', entity)
     if (entity.action === 'subscription' && entity.categoryId) {
       subscriptionCategory(entity)
     }
     if (entity.action === 'top') {
-      categoryPage(entity);
+      categoryPagination(entity);
     }
     // if (entity.categoryId) {
     //   // TODO show rss feed list
@@ -192,7 +111,7 @@ module.exports = function (robot) {
   /**
    * Get user profile
    */
-  robot.hear(/whoami/i, function (res) {
+  robot.hear(/\/me/i, function (res) {
     robot.http("https://api.line.me/v2/bot/profile/" + res.message.user.id)
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .get()(function (err, resp, body) {
@@ -206,17 +125,17 @@ module.exports = function (robot) {
   /**
    * Support on this bot
    */
-  robot.hear(/help/i, function (res) {
-    var text1 = new SendText('輸入 [top]，顯示 Top 3 推薦類別')
-    var text2 = new SendText('輸入 [list]，顯示訂閱清單')
-    var text3 = new SendText('輸入 [whoami]，顯示個人資訊')
-    res.reply(text1, text2, text3)
+  robot.hear(/\/help/i, function (res) {
+    var text1 = new SendText('輸入 [/hot]，顯示熱門類別\r\n輸入 [/list]，顯示訂閱清單\r\n輸入 [/me]，顯示個人資訊')
+    // var text2 = new SendText('輸入 [/list]，顯示訂閱清單')
+    // var text3 = new SendText('輸入 [/me]，顯示個人資訊')
+    res.reply(text1/*, text2, text3*/)
   })
 
   /**  
    * Get Top 3 rss
    */
-  robot.hear(/top/i, function (res) {
+  robot.hear(/\/hot/i, function (res) {
     var categoryList = category.readAll().then(function (result) {
       console.log('top rowCount: ', result.rowCount)
       category.all().then(function(categoryResult) {
@@ -235,7 +154,7 @@ module.exports = function (robot) {
   /**
    * List all rss subscription
    */
-  robot.hear(/list/i, function (res) {
+  robot.hear(/\/list/i, function (res) {
     userSubscription.readByUserId(res.message.user.id).then(function (result) {
       var msg = buildButton("subscription list", result)
       res.reply(msg)
@@ -245,59 +164,28 @@ module.exports = function (robot) {
   /**
    * get rss feeds
    */
-  robot.hear(/rss/i, function (res) {
-    // var rssUrl = 'http://feeds.feedburner.com/engadget/cstb'
-    var rssUrl = 'http://a305020.pixnet.net/blog/feed/rss'
-    var limit = FEED_LIMIT
-    var offset = 3
-    getRssFeeds(res, rssUrl, limit, offset)
-  })
-
-  robot.hear(/a/i, function (res) {
-    var btntemp = {
-      "type": "template",
-      "altText": "this is a buttons template",
-      "template": {
-        "type": "buttons",
-        "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
-        "title": "Menu",
-        "text": "Please select",
-        "actions": [
-          {
-            "type": "postback",
-            "label": "Buy",
-            "data": "action=buy&itemid=123"
-          },
-          {
-            "type": "postback",
-            "label": "Add to cart",
-            "data": "action=add&itemid=123"
-          },
-          {
-            "type": "uri",
-            "label": "View detail",
-            "uri": "http://example.com/page/123"
-          }
-        ]
-      }
-    }
-
-    res.reply(carouselTemp)
-  })
+  // robot.hear(/rss/i, function (res) {
+  //   // var rssUrl = 'http://feeds.feedburner.com/engadget/cstb'
+  //   var rssUrl = 'http://a305020.pixnet.net/blog/feed/rss'
+  //   var limit = FEED_LIMIT
+  //   var offset = 3
+  //   getRssFeeds(res, rssUrl, limit, offset)
+  // })
 
   /**
-   * push notification
+   * Save user profile
    */
-  robot.hear(/push/i, function (res) {
-    var message = [
-      {
-        "type": "text",
-        "text": "通知"
-      }
-    ]
-    pushMessage('U33823165fc452e43a0a66ad60fba52bf', message)
-    res.reply(new SendText('通知服務'))
-  })
+  function saveUser(userId) {
+    robot.http("https://api.line.me/v2/bot/profile/" + userId)
+      .header('Authorization', "Bearer " + LINE_TOKEN)
+      .get()(function (err, resp, body) {
+        var respBody = JSON.parse(body)
+        var entity = { id: respBody.userId, displayName: respBody.displayName }
+        users.create(entity).then(function (result) {
+          console.log(respBody.userId + ' updated')
+        })
+      })
+  }
 
   /**
    * Push message API
@@ -315,7 +203,10 @@ module.exports = function (robot) {
       })
   }
 
-  function categoryPage(entity) {
+  /**
+   * Show category and pagination
+   */
+  function categoryPagination(entity) {
     var categoryList = category.readAll(entity.limit, entity.offset).then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
@@ -440,10 +331,12 @@ module.exports = function (robot) {
         "columns": columns
       }
     }
-    // console.log('#3', util.inspect(obj, false, null))
     return obj
   }
 
+  /**
+   * List subscription categories
+   */
   function buildButton(altText, result) {
     var actions = []
     result.rows.forEach(function (data) {
@@ -468,6 +361,9 @@ module.exports = function (robot) {
     return obj
   }
 
+  /**
+   * User subscribe/unsubscribe category
+   */
   function subscriptionCategory(entity) {
     console.log('subscriptionCategory: ', entity)
     if (entity.status === SUBSCRIBE) {
@@ -530,48 +426,6 @@ module.exports = function (robot) {
       })
     }
   }
-
-  /**
-   * Do subscribe
-   */
-  // function subscriptionRss(entity) {
-  //   console.log('subscriptionRss: ', entity)
-  //   if (entity.status == SUBSCRIBE) {
-  //     userSubscription.create(entity).then(function (result) {
-  //       rss.read(entity.rssId).then(function (rssResult) {
-  //         if (rssResult.rowCount > 0) {
-  //           var rssResultData = rssResult.rows[0];
-  //           var message = [
-  //             {
-  //               "type": "text",
-  //               "text": "[" + rssResultData.rssname + "] 訂閱完成"
-  //             }
-  //           ]
-  //           pushMessage(entity.userId, message)
-  //         }
-  //       })
-  //     }).catch(function (err) {
-  //       console.log(err)
-  //     })
-  //   } else if (entity.status = UNSUBSCRIBE) {
-  //     userSubscription.update(entity).then(function (result) {
-  //       rss.read(entity.rssId).then(function (rssResult) {
-  //         if (rssResult.rowCount > 0) {
-  //           var rssResultData = rssResult.rows[0];
-  //           var message = [
-  //             {
-  //               "type": "text",
-  //               "text": "[" + rssResultData.rssname + "] 已取消訂閱"
-  //             }
-  //           ]
-  //           pushMessage(entity.userId, message)
-  //         }
-  //       })
-  //     }).catch(function (err) {
-  //       console.log(err)
-  //     })
-  //   }
-  // }
 
   function getRssLinks(entity) {
     rss.readByCategoryId(entity.categoryId, entity.limit, entity.offset).then(function (result) {
