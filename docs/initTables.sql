@@ -10,6 +10,7 @@ ALTER TABLE Users
 CREATE TABLE IF NOT EXISTS Category (
 	id serial primary key,
 	name text,
+	description text,
 	thumbnail text,
 	categoryUrl text,
 	createTimestamp timestamp with time zone
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS Rss (
 	categoryId integer,
 	rssName text,
 	rssUrl text,
+	rssHtml text,
 	thumbnail text,
 	createTimestamp timestamp with time zone,
 	lastUpdateTimestamp timestamp with time zone
@@ -38,6 +40,7 @@ CREATE TABLE IF NOT EXISTS RssFeed (
 	rssFeedUrl text,
 	releaseDate date,
 	thumbnail text,
+	rssFeedContent text,
 	createTimestamp timestamp with time zone
 );
 
