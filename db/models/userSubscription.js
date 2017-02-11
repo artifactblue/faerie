@@ -18,8 +18,8 @@ UserSubscription.prototype.check = function(entity) {
 }
 
 UserSubscription.prototype.create = function(entity) {
-	return pool.query('INSERT INTO userSubscription (UserId, CategoryId, Status, CreateTimestamp) '
-		+ ' SELECT $1, $2, $3, now() '
+	return pool.query('INSERT INTO userSubscription (UserId, CategoryId, Status, CreateTimestamp, lastUpdateTimestamp) '
+		+ ' SELECT $1, $2, $3, now(), now() '
 		+ ' WHERE NOT EXISTS (SELECT 1 FROM userSubscription WHERE UserId = $4 AND CategoryId = $5 AND Status = $6)', 
 		[entity.userId, entity.categoryId, entity.status, entity.userId, entity.categoryId, entity.status])
 }
@@ -29,10 +29,12 @@ UserSubscription.prototype.update = function(entity) {
 		[entity.status, entity.userId, entity.categoryId])
 }
 
-UserSubscription.prototype.loadUnpushedCategory = function(entity) {
-	return pool.query('SELECT userSubscription.* FROM userSubscription '
+UserSubscription.prototype.loadUnpushedCategory = function() {
+	return pool.query('SELECT DISTINCT userSubscription.* FROM userSubscription '
 		+ ' LEFT JOIN rss ON userSubscription.categoryId = rss.categoryId '
-		+ ' WHERE userSubscription.lastUpdateTimestamp < rss.lastUpdateTimestamp')
+		+ ' WHERE userSubscription.lastUpdateTimestamp < rss.lastUpdateTimestamp'
+		+ ' AND userSubscription.status = $1 LIMIT 3',
+		[UserSubscription.prototype.SUBSCRIBE])
 }
 
 UserSubscription.prototype.updatePushedCategory = function(entity) {

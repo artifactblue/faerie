@@ -44,7 +44,14 @@ module.exports = function (robot) {
    * Max: 1 MB
    */
 
-
+  var filterText = function(message) {
+    var result = false
+    var textMsg = message.message
+    if (textMsg && textMsg.type && textMsg.type === 'text') {
+      result = true
+    }
+    return result
+  }
 
   /**
    * Filter all sticker message
@@ -108,6 +115,13 @@ module.exports = function (robot) {
     res.reply(sticker)
   })
 
+  robot.listen(filterText, function(res) {
+    var textMessage = res.message.message
+    // search from database 
+    // category.name, rss.rssname, rssfeed.rssfeedtitle
+    res.reply("研發中")
+  })
+
   /**
    * Get user profile
    */
@@ -116,9 +130,9 @@ module.exports = function (robot) {
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .get()(function (err, resp, body) {
         var respBody = JSON.parse(body)
-        var text1 = new SendText('你好，' + respBody.displayName)
-        var text2 = new SendText('使用者ID ' + res.message.user.id)
-        res.reply(text1, text2)
+        var text = new SendText('你好，' + respBody.displayName + '\r\n'
+          + '使用者ID ' + res.message.user.id)
+        res.reply(text)
       })
   })
 
@@ -126,10 +140,8 @@ module.exports = function (robot) {
    * Support on this bot
    */
   robot.hear(/\/help/i, function (res) {
-    var text1 = new SendText('輸入 [/hot]，顯示熱門類別\r\n輸入 [/list]，顯示訂閱清單\r\n輸入 [/me]，顯示個人資訊')
-    // var text2 = new SendText('輸入 [/list]，顯示訂閱清單')
-    // var text3 = new SendText('輸入 [/me]，顯示個人資訊')
-    res.reply(text1/*, text2, text3*/)
+    var text = new SendText('/hot 熱門類別\r\n/list 已訂閱類別\r\n')
+    res.reply(text)
   })
 
   /**  
@@ -137,7 +149,6 @@ module.exports = function (robot) {
    */
   robot.hear(/\/hot/i, function (res) {
     var categoryList = category.readAll().then(function (result) {
-      console.log('top rowCount: ', result.rowCount)
       category.all().then(function(categoryResult) {
         var readMore = {
           "page": true,
@@ -199,7 +210,8 @@ module.exports = function (robot) {
       .header('Authorization', "Bearer " + LINE_TOKEN)
       .header('Content-Type', 'application/json')
       .post(postData)(function (err, resp, body) {
-        console.log(err, resp, body)
+        //console.log(err, resp, body)
+        console.log("PushMessage to user: " + user)
       })
   }
 
@@ -232,20 +244,21 @@ module.exports = function (robot) {
       var carousel = {
         "thumbnailImageUrl": data.thumbnail,
         "title": data.name,
-        "text": data.name,
+        "text": data.name,  // TODO data.description
         "actions": [
           {
             "type": "uri",
-            "label": "瀏覽[" + data.name + "]",
+            "label": "瀏覽",
             "uri": data.categoryurl
           }, {
             "type": "postback",
-            "label": "訂閱[" + data.name + "]",
+            "label": "趕緊來追蹤",
             "data": "action=subscription&status=" + SUBSCRIBE + "&categoryId=" + data.id
           }
         ]
       }
       columns.push(carousel)
+      altText += data.name + "\r\n" + data.categoryurl + "\r\n\r\n"
     })
     if (readMore.page) {
       var actions = []
@@ -264,7 +277,7 @@ module.exports = function (robot) {
       actions.push(uri);
       var next = {
         "type": "postback",
-        "label": "下一頁",
+        "label": "換換其他分類",
         "data": "action=top&limit=" + readMore.limit + "&offset=" + nextOffset
       }
       // if (prevOffset > 0) {
@@ -287,11 +300,11 @@ module.exports = function (robot) {
         "text": "Read More...",
         "actions": actions
       }
-      console.log(actions.length)
       if (actions.length == 2) {
         columns.push(moreCarousel)
       }
     }
+    // TODO make altText better
     var obj = {
       "type": "template",
       "altText": altText,
@@ -300,12 +313,11 @@ module.exports = function (robot) {
         "columns": columns
       }
     }
-    console.log(util.inspect(obj, false, null));
+    //console.log(util.inspect(obj, false, null));
     return obj
   }
 
   function buildCarouselByCategory(altText, result) {
-    // console.log('#2', altText, result)
     var columns = []
     result.rows.forEach(function (data) {
       var carousel = {
@@ -337,16 +349,46 @@ module.exports = function (robot) {
   /**
    * List subscription categories
    */
+  function buildSubscriptionList(altText, result) {
+    var actions = []
+    result.rows.forEach(function (data) {
+      var action = {
+        "type": "uri",
+        "label": "[" + data.name + "]最新資訊",
+        "uri": "https://i.imgur.com/dsECxwV.jpg"
+      }
+      actions.push(action)
+    })
+    // TODO make altText better
+    var obj = {
+      "type": "template",
+      "altText": altText,
+      "template": {
+        "type": "buttons",
+        "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
+        "title": "訂閱清單",
+        "text": "就算不點選最新資訊，小精靈也會隨時幫您關注任何消息，一有最新資訊立刻通知",
+        "actions": actions
+      }
+    }
+    return obj
+  }
+
+  /**
+   * List unsubscription categories
+   */
   function buildButton(altText, result) {
     var actions = []
     result.rows.forEach(function (data) {
       var action = {
         "type": "postback",
-        "label": "取消訂閱[" + data.name + "]",
+        "label": "取消訂閱" + data.name,
         "data": "action=subscription&status=" + UNSUBSCRIBE + "&categoryId=" + data.id
       }
       actions.push(action)
+      altText += "取消訂閱" + data.name + "\r\nURL:\r\n";
     })
+    // TODO make altText better
     var obj = {
       "type": "template",
       "altText": altText,
@@ -372,7 +414,7 @@ module.exports = function (robot) {
           var message = [
             {
               "type": "text",
-              "text": "您已經訂閱過此分類"
+              "text": "小精靈已經記住了"
             }
           ]
           pushMessage(entity.userId, message)
@@ -384,7 +426,7 @@ module.exports = function (robot) {
                 var message = [
                   {
                     "type": "text",
-                    "text": "[" + categoryResultData.name + "] 訂閱完成"
+                    "text": "小精靈會隨時幫您關注[" + categoryResultData.name + "]，一有新消息立刻通知，使命必達"
                   }
                 ]
                 pushMessage(entity.userId, message)
@@ -401,7 +443,7 @@ module.exports = function (robot) {
           var message = [
             {
               "type": "text",
-              "text": "您尚未訂閱此分類"
+              "text": "試試看其他類別？"
             }
           ]
           pushMessage(entity.userId, message)
@@ -413,7 +455,7 @@ module.exports = function (robot) {
                 var message = [
                   {
                     "type": "text",
-                    "text": "[" + categoryResultData.name + "] 已取消訂閱"
+                    "text": "不喜歡" + categoryResultData.name + "，我們試試看其他類別？"
                   }
                 ]
                 pushMessage(entity.userId, message)
