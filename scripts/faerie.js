@@ -140,12 +140,15 @@ module.exports = function (robot) {
    * Support on this bot
    */
   robot.hear(/\/help/i, function (res) {
-    var text = new SendText('/hot 熱門類別\r\n/list 已訂閱類別\r\n')
+    var text = new SendText(
+      '/hot 熱門類別\r\n' +
+      '/list 已訂閱類別\r\n' +
+      '/page <頁數> 分類頁數搜尋')
     res.reply(text)
   })
 
   /**  
-   * Get Top 3 rss
+   * Get Top 3 rss category
    */
   robot.hear(/\/hot/i, function (res) {
     var categoryList = category.readAll().then(function (result) {
@@ -163,11 +166,29 @@ module.exports = function (robot) {
   })
 
   /**
+   * Get Category by page
+   */
+  robot.hear(/\/page \d{1}/i, function(res) {
+    var categoryList = category.readAll().then(function (result) {
+      category.all().then(function(categoryResult) {
+        var readMore = {
+          "page": true,
+          "offset": 3 * (parseInt(req.match[1], 10) - 1),
+          "limit": 3 * parseInt(req.match[1], 10),
+          "total": categoryResult.rows[0].total
+        }
+        var msg = buildCarousel("推薦分類: \r\n\r\n", result, readMore)
+        res.reply(msg)
+      })
+    })
+  })
+
+  /**
    * List all rss subscription
    */
   robot.hear(/\/list/i, function (res) {
     userSubscription.readByUserId(res.message.user.id).then(function (result) {
-      var msg = buildButton("subscription list\r\n\r\n", result)
+      var msg = buildButton("訂閱清單: \r\n\r\n", result)
       res.reply(msg)
     })
   })
@@ -228,7 +249,7 @@ module.exports = function (robot) {
           "total": categoryResult.rows[0].total
         }
         var msg = [
-          buildCarousel("category recommend", result, readMore)
+          buildCarousel("推薦分類: \r\n\r\n", result, readMore)
         ]
         pushMessage(entity.userId, msg)
       })
