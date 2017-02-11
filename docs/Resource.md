@@ -39,3 +39,10 @@ http://www.appledaily.com.tw/rss/newcreate/kind/sec/type/10
 CNN news
 http://edition.cnn.com/services/rss/
 
+### BitCoin
+
+巴比特资讯全文输出RSS地址，排版良好，适合用RSS阅读器阅读
+http://fulltextrssfeed.com/www.8btc.com/feed
+
+比特币中国公众号RSS订阅地址：
+http://ys.8wss.com/rss/oIWsFt3a4m9oOqMzB_3ODAcRtMII/
