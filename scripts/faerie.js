@@ -177,7 +177,7 @@ module.exports = function (robot) {
           "limit": 3 * parseInt(req.match[1], 10),
           "total": categoryResult.rows[0].total
         }
-        var msg = buildCarousel("推薦分類: \r\n\r\n", result, readMore)
+        var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
         res.reply(msg)
       })
     })
@@ -188,7 +188,7 @@ module.exports = function (robot) {
    */
   robot.hear(/\/list/i, function (res) {
     userSubscription.readByUserId(res.message.user.id).then(function (result) {
-      var msg = buildButton("訂閱清單: \r\n\r\n", result)
+      var msg = buildButton("訂閱類別: \r\n\r\n", result)
       res.reply(msg)
     })
   })
@@ -249,7 +249,7 @@ module.exports = function (robot) {
           "total": categoryResult.rows[0].total
         }
         var msg = [
-          buildCarousel("推薦分類: \r\n\r\n", result, readMore)
+          buildCarousel("熱門類別: \r\n\r\n", result, readMore)
         ]
         pushMessage(entity.userId, msg)
       })
