@@ -63,10 +63,10 @@ function rec() {
 rec()
 
 function buildCarousel(categoryId, result) {
-	var altText = "altText"
+	var altText = ""
     var columns = []
     result.rows.forEach(function (data) {
-    	var content = JSON.parse(data.rssfeedcontent)
+      var content = JSON.parse(data.rssfeedcontent)
       var carousel = {
         "thumbnailImageUrl": data.thumbnail.split(",")[0],
         "title": data.rssfeedtitle,
@@ -75,11 +75,12 @@ function buildCarousel(categoryId, result) {
           {
             "type": "uri",
             "label": "瀏覽",
-            "uri": "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid
+            "uri": "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
           }
         ]
       }
       columns.push(carousel)
+      altText += data.rssfeedtitle + "\r\n" + "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
     })
 
     var moreCarousel = {
@@ -121,7 +122,7 @@ function buildButtons(result) {
     // TODO make altText better
     var obj = {
       "type": "template",
-      "altText": altText,
+      "altText": "",
       "template": {
         "type": "buttons",
         "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
@@ -137,7 +138,8 @@ function loadCategory(categoryId, lastUpdateTimestamp) {
 	return new Promise(function(resolve, reject){
 		var entity = {
 			"categoryId": categoryId,
-			"lastUpdateTimestamp": lastUpdateTimestamp
+			"lastUpdateTimestamp": lastUpdateTimestamp,
+			"limit": 3
 		}
 		rssFeed.loadUnpushRssFeed(entity).then(function(rssResult){
 			if (rssResult.rowCount > 0) {
@@ -169,6 +171,6 @@ function pushMessage(user, message) {
     json: true,
     body: postData
   }, function(err, resp, body){
-    console.log(err, resp, body)
+    console.log(body)
   })
 }

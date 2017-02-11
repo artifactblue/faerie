@@ -258,6 +258,7 @@ module.exports = function (robot) {
         ]
       }
       columns.push(carousel)
+      altText += data.name + "\r\n" + data.categoryurl + "\r\n\r\n"
     })
     if (readMore.page) {
       var actions = []
@@ -299,7 +300,6 @@ module.exports = function (robot) {
         "text": "Read More...",
         "actions": actions
       }
-      console.log(actions.length)
       if (actions.length == 2) {
         columns.push(moreCarousel)
       }
@@ -382,10 +382,11 @@ module.exports = function (robot) {
     result.rows.forEach(function (data) {
       var action = {
         "type": "postback",
-        "label": "取消訂閱" + data.name + "",
+        "label": "取消訂閱" + data.name,
         "data": "action=subscription&status=" + UNSUBSCRIBE + "&categoryId=" + data.id
       }
       actions.push(action)
+      altText += "取消訂閱" + data.name + "\r\nURL:\r\n";
     })
     // TODO make altText better
     var obj = {

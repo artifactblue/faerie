@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Rss (
 	rssUrl text,
 	rssHtml text,
 	thumbnail text,
+	description text,
 	createTimestamp timestamp with time zone,
 	lastUpdateTimestamp timestamp with time zone
 );
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS RssFeed (
 	releaseDate date,
 	thumbnail text,
 	rssFeedContent text,
+	description text,
 	createTimestamp timestamp with time zone
 );
 
@@ -67,4 +69,15 @@ CREATE TABLE IF NOT EXISTS RssView (
 );
 
 ALTER TABLE RssView
+  OWNER TO root;
+
+CREATE TABLE IF NOT EXISTS ViewCount (
+	id serial primary key,
+	categoryId integer,
+	rssId integer,
+	rssFeedId integer,
+	count integer
+);
+
+ALTER TABLE ViewCount
   OWNER TO root;
