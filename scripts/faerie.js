@@ -119,7 +119,7 @@ module.exports = function (robot) {
     var textMessage = res.message.message
     // search from database 
     // category.name, rss.rssname, rssfeed.rssfeedtitle
-    res.reply("研發中")
+    //res.reply("研發中")
   })
 
   /**
@@ -156,7 +156,7 @@ module.exports = function (robot) {
           "limit": 3,
           "total": categoryResult.rows[0].total
         }
-        var msg = buildCarousel("category recommend", result, readMore)
+        var msg = buildCarousel("category recommend\r\n\r\n", result, readMore)
         res.reply(msg)
       })
     })
@@ -167,7 +167,7 @@ module.exports = function (robot) {
    */
   robot.hear(/\/list/i, function (res) {
     userSubscription.readByUserId(res.message.user.id).then(function (result) {
-      var msg = buildButton("subscription list", result)
+      var msg = buildButton("subscription list\r\n\r\n", result)
       res.reply(msg)
     })
   })
