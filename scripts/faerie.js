@@ -170,6 +170,7 @@ module.exports = function (robot) {
    * Get Category by page
    */
   robot.hear(/\/page \d{1}/i, function(res) {
+    console.log('### page')
     var categoryList = category.readAll().then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
