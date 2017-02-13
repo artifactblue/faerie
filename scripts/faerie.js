@@ -285,6 +285,8 @@ module.exports = function (robot) {
       altText += data.name + "\r\n" + HOST_NAME + "/i/" + data.id + "\r\n\r\n"
     })
     if (readMore.page) {
+      var moreTitle = "畫面上沒有你心儀的分類嗎？沒關係，讓我們繼續看下去"
+      var moreText = "Read More..."
       var actions = []
       //var prevOffset = parseInt(readMore.offset, 10) - 3
       var nextOffset = parseInt(readMore.offset, 10) + FEED_LIMIT
@@ -307,21 +309,24 @@ module.exports = function (robot) {
       // if (prevOffset > 0) {
       //   actions.push(prev)
       // }
+      var last = false
       if (nextOffset < readMore.total) {
         actions.push(next)
       } else {
+        last = true
         var final = {
           "type": "postback",
           "label": "下面沒有了，重頭開始？",
           "data": "action=top&limit=" + readMore.limit + "&offset=0"
         }
+        moreTitle = "╮(╯◇╰)╭，分類見底了"
         actions.push(final)
       }
 
       var moreCarousel = {
         "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
-        "title": "畫面上沒有你心儀的分類嗎？沒關係，讓我們繼續看下去",
-        "text": "Read More...",
+        "title": moreTitle,
+        "text": moreText,
         "actions": actions
       }
       if (actions.length == 2) {
