@@ -170,7 +170,7 @@ module.exports = function (robot) {
    * Get Category by page
    */
   robot.hear(/\/page \d{1}/i, function(res) {
-    console.log('match: ', res.match[1]);
+    console.log('match: ', req.match[1], res.match[1]);
     var categoryList = category.readAll(FEED_LIMIT, FEED_LIMIT * (parseInt(res.match[1], 10) - 1)).then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
