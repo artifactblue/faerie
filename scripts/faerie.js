@@ -27,6 +27,7 @@ var request = require('request') // for fetching the feed
 var FEED_LIMIT = 3
 var DESCRIPTION_LENGTH = 60
 var sendImageString = ""
+var HOST_NAME = "http://www.artifactblue.com"
 
 var {
   SUBSCRIBE,
@@ -270,7 +271,7 @@ module.exports = function (robot) {
           {
             "type": "uri",
             "label": "瀏覽",
-            "uri": data.categoryurl
+            "uri": HOST_NAME + "/i/" + data.id
           }, {
             "type": "postback",
             "label": "趕緊來追蹤",
@@ -279,7 +280,7 @@ module.exports = function (robot) {
         ]
       }
       columns.push(carousel)
-      altText += data.name + "\r\n" + data.categoryurl + "\r\n\r\n"
+      altText += data.name + "\r\n" + HOST_NAME + "/i/" + data.id + "\r\n\r\n"
     })
     if (readMore.page) {
       var actions = []
@@ -293,7 +294,7 @@ module.exports = function (robot) {
       var uri = {
         "type": "uri",
         "label": "查看完整分類清單",
-        "uri": "https://i.imgur.com/dsECxwV.jpg"
+        "uri": HOST_NAME
       }
       actions.push(uri);
       var next = {
@@ -407,7 +408,7 @@ module.exports = function (robot) {
         "data": "action=subscription&status=" + UNSUBSCRIBE + "&categoryId=" + data.id
       }
       actions.push(action)
-      altText += "取消訂閱" + data.name + "\r\nURL:\r\n";
+      altText += "取消訂閱" + data.name + "\r\n" + HOST_NAME + "\r\n";
     })
     // TODO make altText better
     var obj = {
