@@ -157,10 +157,10 @@ module.exports = function (robot) {
         var readMore = {
           "page": true,
           "offset": 0,
-          "limit": 3,
+          "limit": FEED_LIMIT,
           "total": categoryResult.rows[0].total
         }
-        var msg = buildCarousel("category recommend\r\n\r\n", result, readMore)
+        var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
         res.reply(msg)
       })
     })
@@ -171,12 +171,12 @@ module.exports = function (robot) {
    */
   robot.hear(/\/page \d{1}/i, function(res) {
     console.log('match: ', res.match[1]);
-    var categoryList = category.readAll().then(function (result) {
+    var categoryList = category.readAll(FEED_LIMIT, FEED_LIMIT * (parseInt(res.match[1], 10) - 1)).then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
           "page": true,
-          "offset": 3 * (parseInt(res.match[1], 10) - 1),
-          "limit": 3 * parseInt(res.match[1], 10),
+          "offset": FEED_LIMIT * (parseInt(res.match[1], 10) - 1),
+          "limit": FEED_LIMIT,
           "total": categoryResult.rows[0].total
         }
         var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
@@ -286,7 +286,7 @@ module.exports = function (robot) {
     if (readMore.page) {
       var actions = []
       //var prevOffset = parseInt(readMore.offset, 10) - 3
-      var nextOffset = parseInt(readMore.offset, 10) + 3
+      var nextOffset = parseInt(readMore.offset, 10) + FEED_LIMIT
       // var prev = {
       //   "type": "postback",
       //   "label": "上一頁",
@@ -324,6 +324,7 @@ module.exports = function (robot) {
         "actions": actions
       }
       if (actions.length == 2) {
+        altText += "\r\n/page " + (readMore.offset / FEED_LIMIT) + " 查看更多分類"
         columns.push(moreCarousel)
       }
     }
@@ -546,7 +547,7 @@ module.exports = function (robot) {
         var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
         // substring by length
         if (clearDescription.length > DESCRIPTION_LENGTH) {
-          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3) + '...'
+          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...'
         } else {
           var trimDescription = clearDescription
         }
