@@ -72,8 +72,7 @@ module.exports = function (robot) {
   var filterPostback = function (message) {
     var result = false
     var postbackMsg = message.message
-    console.log('message: ', message)
-    saveUser(postbackMsg.user.id)
+    saveUser(message.user.id)
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback') {
       result = true
     }
