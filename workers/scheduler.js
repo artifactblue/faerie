@@ -7,6 +7,7 @@ var util = require('util')
 var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
 var TIMEOUT = 5000
 var DESCRIPTION_LENGTH = 20
+var HOST_NAME = "http://www.artifactblue.com"
 
 function rec() {
 	setTimeout(function(){ 
@@ -80,7 +81,7 @@ function buildCarousel(categoryId, result) {
         ]
       }
       columns.push(carousel)
-      altText += data.rssfeedtitle + "\r\n" + "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
+      altText += data.rssfeedtitle + "\r\n" + "/i/" + categoryId + "/" + data.rssid + "/" + data.id
     })
 
     var moreCarousel = {
@@ -91,7 +92,7 @@ function buildCarousel(categoryId, result) {
         	{
 		        "type": "uri",
 		        "label": "查看更多資訊",
-		        "uri": "http://www.artifactblue.com"
+		        "uri": HOST_NAME
 	      	}
         ]
     }

@@ -46,3 +46,22 @@ http://fulltextrssfeed.com/www.8btc.com/feed
 
 比特币中国公众号RSS订阅地址：
 http://ys.8wss.com/rss/oIWsFt3a4m9oOqMzB_3ODAcRtMII/
+
+### 電影
+
+台北票房排行榜
+https://tw.movies.yahoo.com/rss/tpeboxoffice 
+電影頭條
+https://tw.movies.yahoo.com/rss/headline  
+台北票房榜	
+https://tw.movies.yahoo.com/rss/tpeboxoffice
+全美票房榜	
+https://tw.movies.yahoo.com/rss/usaboxoffice
+預告片榜	
+https://tw.movies.yahoo.com/rss/upcoming
+網友評分榜	
+https://tw.movies.yahoo.com/rss/userrating
+週冠軍票房列表	
+https://tw.movies.yahoo.com/rss/wkboxoffice
+年度票房榜	
+https://tw.movies.yahoo.com/rss/yrboxoffice
