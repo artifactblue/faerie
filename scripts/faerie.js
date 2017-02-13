@@ -170,7 +170,7 @@ module.exports = function (robot) {
    * Get Category by page
    */
   robot.hear(/\/page (.*)/i, function(res) {
-    console.log('match: ', res.match[1], res.match[1].match(/\d{1}/));
+    //console.log('match: ', res.match[1], res.match[1].match(/\d{1}/));
     if (res.match[1].match(/\d{1}/))
     var categoryList = category.readAll(FEED_LIMIT, FEED_LIMIT * (parseInt(res.match[1], 10) - 1)).then(function (result) {
       category.all().then(function(categoryResult) {
@@ -325,7 +325,7 @@ module.exports = function (robot) {
         "actions": actions
       }
       if (actions.length == 2) {
-        altText += "\r\n/page " + (readMore.offset / FEED_LIMIT) + " 查看更多分類"
+        altText += "\r\n/page " + ((readMore.offset / FEED_LIMIT) + 2) + " 查看更多分類"
         columns.push(moreCarousel)
       }
     }
