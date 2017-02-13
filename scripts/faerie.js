@@ -170,13 +170,13 @@ module.exports = function (robot) {
    * Get Category by page
    */
   robot.hear(/\/page \d{1}/i, function(res) {
-    console.log('### page')
+    console.log('match: ', res.match[1]);
     var categoryList = category.readAll().then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
           "page": true,
-          "offset": 3 * (parseInt(req.match[1], 10) - 1),
-          "limit": 3 * parseInt(req.match[1], 10),
+          "offset": 3 * (parseInt(res.match[1], 10) - 1),
+          "limit": 3 * parseInt(res.match[1], 10),
           "total": categoryResult.rows[0].total
         }
         var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
