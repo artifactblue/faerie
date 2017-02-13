@@ -4,6 +4,7 @@ var rssFeed = require('../db/models/rssFeed.js')
 var request = require('request')
 var util = require('util')
 
+var FEED_LIMIT = 3
 var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
 var TIMEOUT = 5000
 var DESCRIPTION_LENGTH = 20
@@ -71,7 +72,7 @@ function buildCarousel(categoryId, result) {
       var carousel = {
         "thumbnailImageUrl": data.thumbnail.split(",")[0],
         "title": data.rssfeedtitle,
-        "text": data.rssfeedcontent.substring(0, DESCRIPTION_LENGTH - 3) + '...',  // TODO data.description
+        "text": data.rssfeedcontent.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...',  // TODO data.description
         "actions": [
           {
             "type": "uri",
@@ -140,7 +141,7 @@ function loadCategory(categoryId, lastUpdateTimestamp) {
 		var entity = {
 			"categoryId": categoryId,
 			"lastUpdateTimestamp": lastUpdateTimestamp,
-			"limit": 3
+			"limit": FEED_LIMIT
 		}
 		rssFeed.loadUnpushRssFeed(entity).then(function(rssResult){
 			if (rssResult.rowCount > 0) {

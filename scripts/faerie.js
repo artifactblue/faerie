@@ -72,7 +72,7 @@ module.exports = function (robot) {
   var filterPostback = function (message) {
     var result = false
     var postbackMsg = message.message
-    saveUser(postbackMsg.user.id)
+    saveUser(message.user.id)
     if (postbackMsg && postbackMsg.type && postbackMsg.type === 'postback') {
       result = true
     }
@@ -157,10 +157,10 @@ module.exports = function (robot) {
         var readMore = {
           "page": true,
           "offset": 0,
-          "limit": 3,
+          "limit": FEED_LIMIT,
           "total": categoryResult.rows[0].total
         }
-        var msg = buildCarousel("category recommend\r\n\r\n", result, readMore)
+        var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
         res.reply(msg)
       })
     })
@@ -169,13 +169,15 @@ module.exports = function (robot) {
   /**
    * Get Category by page
    */
-  robot.hear(/\/page \d{1}/i, function(res) {
-    var categoryList = category.readAll().then(function (result) {
+  robot.hear(/\/page (.*)/i, function(res) {
+    //console.log('match: ', res.match[1], res.match[1].match(/\d{1}/));
+    if (res.match[1].match(/\d{1}/))
+    var categoryList = category.readAll(FEED_LIMIT, FEED_LIMIT * (parseInt(res.match[1], 10) - 1)).then(function (result) {
       category.all().then(function(categoryResult) {
         var readMore = {
           "page": true,
-          "offset": 3 * (parseInt(req.match[1], 10) - 1),
-          "limit": 3 * parseInt(req.match[1], 10),
+          "offset": FEED_LIMIT * (parseInt(res.match[1], 10) - 1),
+          "limit": FEED_LIMIT,
           "total": categoryResult.rows[0].total
         }
         var msg = buildCarousel("熱門類別: \r\n\r\n", result, readMore)
@@ -283,9 +285,11 @@ module.exports = function (robot) {
       altText += data.name + "\r\n" + HOST_NAME + "/i/" + data.id + "\r\n\r\n"
     })
     if (readMore.page) {
+      var moreTitle = "畫面上沒有你心儀的分類嗎？沒關係，讓我們繼續看下去"
+      var moreText = "Read More..."
       var actions = []
       //var prevOffset = parseInt(readMore.offset, 10) - 3
-      var nextOffset = parseInt(readMore.offset, 10) + 3
+      var nextOffset = parseInt(readMore.offset, 10) + FEED_LIMIT
       // var prev = {
       //   "type": "postback",
       //   "label": "上一頁",
@@ -305,24 +309,32 @@ module.exports = function (robot) {
       // if (prevOffset > 0) {
       //   actions.push(prev)
       // }
+      var last = false
       if (nextOffset < readMore.total) {
         actions.push(next)
       } else {
+        last = true
         var final = {
           "type": "postback",
           "label": "下面沒有了，重頭開始？",
           "data": "action=top&limit=" + readMore.limit + "&offset=0"
         }
+        moreTitle = "╮(╯◇╰)╭，分類見底了"
         actions.push(final)
       }
 
       var moreCarousel = {
         "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
-        "title": "畫面上沒有你心儀的分類嗎？沒關係，讓我們繼續看下去",
-        "text": "Read More...",
+        "title": moreTitle,
+        "text": moreText,
         "actions": actions
       }
       if (actions.length == 2) {
+        if (last) {
+          altText += "╮(╯◇╰)╭，分類見底了\r\n/page 1 重新開始？"
+        } else {
+          altText += "\r\n/page " + ((readMore.offset / FEED_LIMIT) + 2) + " 查看更多分類"
+        }
         columns.push(moreCarousel)
       }
     }
@@ -545,7 +557,7 @@ module.exports = function (robot) {
         var clearDescription = description.replace(/<\/?[^>]+(>|$)/g, "")
         // substring by length
         if (clearDescription.length > DESCRIPTION_LENGTH) {
-          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - 3) + '...'
+          var trimDescription = clearDescription.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...'
         } else {
           var trimDescription = clearDescription
         }
