@@ -330,7 +330,11 @@ module.exports = function (robot) {
         "actions": actions
       }
       if (actions.length == 2) {
-        altText += "\r\n/page " + ((readMore.offset / FEED_LIMIT) + 2) + " 查看更多分類"
+        if (last) {
+          altText += "╮(╯◇╰)╭，分類見底了\r\n/page 1 重新開始？"
+        } else {
+          altText += "\r\n/page " + ((readMore.offset / FEED_LIMIT) + 2) + " 查看更多分類"
+        }
         columns.push(moreCarousel)
       }
     }
