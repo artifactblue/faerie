@@ -8,7 +8,11 @@ RssFeed.prototype.read = function(id) {
 }
 
 RssFeed.prototype.readAll = function(limit = 3, offset = 0) {
-    return pool.query('SELECT * FROM RssFeed ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset)
+	var limitSQL = ""
+	if (limit > -1) {
+		limitSQL += " LIMIT " + limit + " OFFSET " + offset
+	}
+    return pool.query('SELECT * FROM RssFeed ORDER BY id' + limitSQL)
 }
 
 RssFeed.prototype.create = function(entity) {
@@ -27,6 +31,11 @@ RssFeed.prototype.loadUnpushRssFeed = function(entity) {
 
 RssFeed.prototype.update = function(entity) {
 
+}
+
+RssFeed.prototype.updateThumbnail = function(entity) {
+	return pool.query('UPDATE RssFeed SET thumbnail = $1 WHERE id = $2',
+		[entity.thumbnail, entity.id]);
 }
 
 exports = module.exports = new RssFeed()
