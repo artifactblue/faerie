@@ -1,7 +1,7 @@
 var imgur = require('imgur')
 var rssFeed = require('../db/models/rssFeed.js')
 
-rssFeed.readAll(5, 0).then(function(result){
+rssFeed.readAll(300, 0).then(function(result){
 	result.rows.forEach(function(rssFeedEntity){
 		if (rssFeedEntity.thumbnail.startsWith("http://")){
 			console.log("BEFORE ID: " + rssFeedEntity.id + ", ORIGIN: " + rssFeedEntity.thumbnail);
@@ -19,7 +19,13 @@ rssFeed.readAll(5, 0).then(function(result){
 		        })
 		    })
 		    .catch(function (err) {
-		        console.error(err.message);
+		        //console.error(err.message);
+		        if (err.message.startsWith("Invalid URL")) {
+		        	rssFeed.markAsInvalidURL(rssFeedEntity.id).then(function(result){
+
+		        	})
+		        }
+		        console.log("ERROR ID: " + rssFeedEntity.id)
 		    });
 		}
     })

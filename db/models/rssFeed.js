@@ -38,4 +38,9 @@ RssFeed.prototype.updateThumbnail = function(entity) {
 		[entity.thumbnail, entity.id]);
 }
 
+RssFeed.prototype.markAsInvalidURL = function(id) {
+	return pool.query('UPDATE RssFeed SET status = false WHERE id = $1', 
+		[id]);
+}
+
 exports = module.exports = new RssFeed()
