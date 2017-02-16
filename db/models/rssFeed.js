@@ -12,7 +12,7 @@ RssFeed.prototype.readAll = function(limit = 3, offset = 0) {
 	if (limit > -1) {
 		limitSQL += " LIMIT " + limit + " OFFSET " + offset
 	}
-    return pool.query('SELECT * FROM RssFeed ORDER BY id' + limitSQL)
+    return pool.query('SELECT * FROM RssFeed WHERE Status = true ORDER BY id' + limitSQL)
 }
 
 RssFeed.prototype.create = function(entity) {
@@ -25,7 +25,7 @@ RssFeed.prototype.create = function(entity) {
 RssFeed.prototype.loadUnpushRssFeed = function(entity) {
 	return pool.query('SELECT rssfeed.* FROM rss '
 		+ ' LEFT JOIN rssFeed ON rss.id = rssFeed.rssid '
-		+ ' WHERE rss.categoryId = $1 and rssFeed.createTimestamp > $2 LIMIT $3',
+		+ ' WHERE rss.categoryId = $1 and rssFeed.createTimestamp > $2 and rssFeed.status = true LIMIT $3',
 		[entity.categoryId, entity.lastUpdateTimestamp, entity.limit]);
 }
 
