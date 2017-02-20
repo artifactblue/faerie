@@ -1,20 +1,33 @@
 INSERT INTO Category (id, name, thumbnail, categoryurl, createTimestamp) VALUES (1, '資訊', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
 INSERT INTO Category (id, name, thumbnail, categoryurl, createTimestamp) VALUES (2, '正妹', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/J0lXGUg.jpg', now());
 INSERT INTO Category (id, name, thumbnail, categoryurl, createTimestamp) VALUES (3, '生活', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/lSoGKrH.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (4, '其他議題', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (5, '研究', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (6, '資源', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (7, 'iphoneapp', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (4, '其他議題', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (5, '研究', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (6, '資源', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (7, 'iphoneapp', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
 INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (8, '新聞', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (9, 'it-news', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (10, '#NewsSquares.XL', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (11, '手機', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (12, 'English', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (13, '財經', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (14, 'PTT', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (15, 'IPA', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (16, '基金', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
-INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (17, '商業', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (9, 'it-news', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (10, '#NewsSquares.XL', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (11, '手機', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (12, 'English', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (13, '財經', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (14, 'PTT', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (15, 'IPA', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (16, '基金', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+--INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (17, '商業', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (18, '八卦', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (19, '娛樂', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+INSERT INTO Category (id, name, thumbnail, categoryurl, createtimestamp) VALUES (20, '塗鴉牆', 'https://i.imgur.com/dsECxwV.jpg', 'https://i.imgur.com/dsECxwV.jpg', now());
+
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '台北票房排行榜', 'https://tw.movies.yahoo.com/rss/tpeboxoffice', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '電影頭條', 'https://tw.movies.yahoo.com/rss/headline', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '台北票房榜', 'https://tw.movies.yahoo.com/rss/tpeboxoffice', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '全美票房榜', 'https://tw.movies.yahoo.com/rss/usaboxoffice', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '預告片榜', 'https://tw.movies.yahoo.com/rss/upcoming', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '網友評分榜', 'https://tw.movies.yahoo.com/rss/userrating', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '週冠軍票房列表', 'https://tw.movies.yahoo.com/rss/wkboxoffice', '', now());
+INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (19, '年度票房榜', 'https://tw.movies.yahoo.com/rss/yrboxoffice', '', now());
+
 
 INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (1, 'Engadget', 'http://feeds.feedburner.com/engadget/cstb', '', now());
 INSERT INTO Rss (categoryId, rssName, rssUrl, thumbnail, createTimestamp) VALUES (1, 'bnext', 'http://www.bnext.com.tw/feed/rss/topicslinks', '', now());

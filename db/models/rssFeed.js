@@ -25,7 +25,8 @@ RssFeed.prototype.create = function(entity) {
 RssFeed.prototype.loadUnpushRssFeed = function(entity) {
 	return pool.query('SELECT rssfeed.* FROM rss '
 		+ ' LEFT JOIN rssFeed ON rss.id = rssFeed.rssid '
-		+ ' WHERE rss.categoryId = $1 and rssFeed.createTimestamp > $2 and rssFeed.status = true LIMIT $3',
+		+ ' WHERE rss.categoryId = $1 AND rssFeed.createTimestamp > $2 AND rssFeed.status = true'
+		+ ' AND rssFeed.thumbnail LIKE \'https%\' LIMIT $3',
 		[entity.categoryId, entity.lastUpdateTimestamp, entity.limit]);
 }
 
