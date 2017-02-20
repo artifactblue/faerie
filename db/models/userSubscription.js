@@ -33,7 +33,7 @@ UserSubscription.prototype.loadUnpushedCategory = function() {
 	return pool.query('SELECT DISTINCT userSubscription.* FROM userSubscription '
 		+ ' LEFT JOIN rss ON userSubscription.categoryId = rss.categoryId '
 		+ ' WHERE userSubscription.lastUpdateTimestamp < rss.lastUpdateTimestamp'
-		+ ' AND userSubscription.status = $1 LIMIT 3',
+		+ ' AND userSubscription.status = $1',
 		[UserSubscription.prototype.SUBSCRIBE])
 }
 
