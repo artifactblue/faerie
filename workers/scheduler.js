@@ -68,11 +68,10 @@ function buildCarousel(categoryId, result) {
 	var altText = ""
     var columns = []
     result.rows.forEach(function (data) {
-      var content = JSON.parse(data.rssfeedcontent)
       var carousel = {
         "thumbnailImageUrl": data.thumbnail.split(",")[0],
         "title": data.rssfeedtitle,
-        "text": data.rssfeedcontent.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...',  // TODO data.description
+        "text": data.description.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...',  // TODO data.description
         "actions": [
           {
             "type": "uri",
@@ -82,7 +81,8 @@ function buildCarousel(categoryId, result) {
         ]
       }
       columns.push(carousel)
-      altText += data.rssfeedtitle + "\r\n" + "/i/" + categoryId + "/" + data.rssid + "/" + data.id
+      altText += data.rssfeedtitle + ": \r\n" + 
+      			"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
     })
 
     var moreCarousel = {
