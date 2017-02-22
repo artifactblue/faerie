@@ -7,11 +7,11 @@ Category.prototype.all = function() {
 }
 
 Category.prototype.read = function(id) {
-    return pool.query('SELECT * FROM category WHERE id = $1', [id])
+    return pool.query('SELECT * FROM category WHERE id = $1 AND status = true', [id])
 }
 
 Category.prototype.readAll = function(limit = 3, offset = 0) {
-    return pool.query('SELECT * FROM category ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset)
+    return pool.query('SELECT * FROM category WHERE status = true ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset)
 }
 
 Category.prototype.create = function(entity) {

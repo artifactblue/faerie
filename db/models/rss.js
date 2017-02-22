@@ -4,11 +4,11 @@ var pool = require('../dbConnectionPool.js')
 function Rss() {}
 
 Rss.prototype.read = function(id) {
-    return pool.query('SELECT * FROM rss WHERE id = $1', [id])
+    return pool.query('SELECT * FROM rss WHERE id = $1 AND status = true', [id])
 }
 
 Rss.prototype.readAll = function(limit = 3, offset = 0) {
-    return pool.query('SELECT * FROM rss ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset)
+    return pool.query('SELECT * FROM rss WHERE status = true ORDER BY id LIMIT ' + limit + ' OFFSET ' + offset)
 }
 
 Rss.prototype.readByCategoryId = function(categoryId, limit = 3, offset = 0) {
