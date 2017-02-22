@@ -401,7 +401,7 @@ module.exports = function (robot) {
         "type": "buttons",
         "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
         "title": "訂閱清單",
-        "text": "就算不點選最新資訊，小精靈也會隨時幫您關注任何消息，一有最新資訊立刻通知",
+        "text": "就算不點選最新資訊，圖文狗也會隨時幫您關注任何消息，一有最新資訊立刻通知",
         "actions": actions
       }
     }
@@ -448,7 +448,7 @@ module.exports = function (robot) {
           var message = [
             {
               "type": "text",
-              "text": "小精靈已經記住了"
+              "text": "圖文狗已經記住了"
             }
           ]
           pushMessage(entity.userId, message)
@@ -460,7 +460,7 @@ module.exports = function (robot) {
                 var message = [
                   {
                     "type": "text",
-                    "text": "小精靈會隨時幫您關注[" + categoryResultData.name + "]，一有新消息立刻通知，使命必達"
+                    "text": "圖文狗會隨時幫您關注[" + categoryResultData.name + "]，一有新消息立刻通知，使命必達"
                   }
                 ]
                 pushMessage(entity.userId, message)
