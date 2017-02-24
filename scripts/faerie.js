@@ -324,7 +324,7 @@ module.exports = function (robot) {
       }
 
       var moreCarousel = {
-        "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
+        "thumbnailImageUrl": "https://i.imgur.com/l6rRHkX.jpg",
         "title": moreTitle,
         "text": moreText,
         "actions": actions
@@ -356,7 +356,7 @@ module.exports = function (robot) {
     result.rows.forEach(function (data) {
       var carousel = {
         // "thumbnailImageUrl": data.thumbnail,
-        "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
+        "thumbnailImageUrl": "https://i.imgur.com/l6rRHkX.jpg",
         "title": data.rssname,
         "text": data.rssname,
         "actions": [
@@ -389,7 +389,7 @@ module.exports = function (robot) {
       var action = {
         "type": "uri",
         "label": "[" + data.name + "]最新資訊",
-        "uri": "https://i.imgur.com/dsECxwV.jpg"
+        "uri": "https://i.imgur.com/l6rRHkX.jpg"
       }
       actions.push(action)
     })
@@ -399,7 +399,7 @@ module.exports = function (robot) {
       "altText": altText,
       "template": {
         "type": "buttons",
-        "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
+        "thumbnailImageUrl": "https://i.imgur.com/l6rRHkX.jpg",
         "title": "訂閱清單",
         "text": "就算不點選最新資訊，圖文狗也會隨時幫您關注任何消息，一有最新資訊立刻通知",
         "actions": actions

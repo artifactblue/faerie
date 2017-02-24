@@ -86,7 +86,7 @@ function buildCarousel(categoryId, result) {
     })
 
     var moreCarousel = {
-        "thumbnailImageUrl": "https://i.imgur.com/dsECxwV.jpg",
+        "thumbnailImageUrl": "https://i.imgur.com/l6rRHkX.jpg",
         "title": "還有更多資訊，千萬別錯過",
         "text": "Read More...",
         "actions": [
