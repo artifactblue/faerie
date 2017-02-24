@@ -70,7 +70,7 @@ function buildCarousel(categoryId, result) {
     result.rows.forEach(function (data) {
       var carousel = {
         "thumbnailImageUrl": data.thumbnail.split(",")[0],
-        "title": data.rssfeedtitle,
+        "title": data.rssfeedtitle.substring(0, DESCRIPTION_LENGTH) + '...',
         "text": data.description.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...',  // TODO data.description
         "actions": [
           {
