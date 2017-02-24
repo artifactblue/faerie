@@ -3,7 +3,7 @@ var pool = require('../dbConnectionPool.js')
 function Category() {}
 
 Category.prototype.all = function() {
-	return pool.query('SELECT count(1) AS total FROM category')
+	return pool.query('SELECT count(1) AS total FROM category WHERE status = true')
 }
 
 Category.prototype.read = function(id) {
