@@ -428,7 +428,7 @@ module.exports = function (robot) {
       "altText": altText,
       "template": {
         "type": "buttons",
-        "thumbnailImageUrl": "https://vignette4.wikia.nocookie.net/bladesandbeasts/images/8/84/Faerie_Dragon.png/revision/latest?cb=20121005191231",
+        "thumbnailImageUrl": "https://i.imgur.com/l6rRHkX.jpg",
         "title": "訂閱清單",
         "text": "點選取消訂閱",
         "actions": actions
