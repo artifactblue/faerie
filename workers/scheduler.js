@@ -6,7 +6,7 @@ var util = require('util')
 
 var FEED_LIMIT = 3
 var LINE_TOKEN = process.env.HUBOT_LINE_TOKEN
-var TIMEOUT = 5000
+var TIMEOUT = 30000
 var DESCRIPTION_LENGTH = 20
 var HOST_NAME = "http://www.artifactblue.com"
 
