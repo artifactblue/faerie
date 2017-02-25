@@ -82,7 +82,7 @@ function buildCarousel(categoryId, result) {
       }
       columns.push(carousel)
       altText += data.rssfeedtitle + ": \r\n" + 
-      			data.rssfeedurl
+      			data.rssfeedurl + "\r\n\r\n"
       			//"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
     })
 
