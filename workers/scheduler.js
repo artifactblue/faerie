@@ -76,13 +76,14 @@ function buildCarousel(categoryId, result) {
           {
             "type": "uri",
             "label": "瀏覽",
-            "uri": "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
+            "uri": data.rssfeedurl// "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
           }
         ]
       }
       columns.push(carousel)
       altText += data.rssfeedtitle + ": \r\n" + 
-      			"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
+      			data.rssfeedurl
+      			//"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
     })
 
     var moreCarousel = {
