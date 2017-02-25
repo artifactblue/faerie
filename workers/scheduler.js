@@ -70,19 +70,20 @@ function buildCarousel(categoryId, result) {
     result.rows.forEach(function (data) {
       var carousel = {
         "thumbnailImageUrl": data.thumbnail.split(",")[0],
-        "title": data.rssfeedtitle,
+        "title": data.rssfeedtitle.substring(0, DESCRIPTION_LENGTH) + '...',
         "text": data.description.substring(0, DESCRIPTION_LENGTH - FEED_LIMIT) + '...',  // TODO data.description
         "actions": [
           {
             "type": "uri",
             "label": "瀏覽",
-            "uri": "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
+            "uri": data.rssfeedurl// "http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id
           }
         ]
       }
       columns.push(carousel)
       altText += data.rssfeedtitle + ": \r\n" + 
-      			"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
+      			data.rssfeedurl + "\r\n\r\n"
+      			//"http://www.artifactblue.com/i/" + categoryId + "/" + data.rssid + "/" + data.id + "\r\n\r\n"
     })
 
     var moreCarousel = {
